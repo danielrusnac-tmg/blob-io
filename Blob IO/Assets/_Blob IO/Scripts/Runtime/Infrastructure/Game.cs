@@ -5,7 +5,7 @@ namespace BlobIO.Infrastructure
 {
     public class Game
     {
-        private GameStateMachine _stateMachine;
+        private readonly GameStateMachine _stateMachine;
 
         public Game(AllServices services)
         {

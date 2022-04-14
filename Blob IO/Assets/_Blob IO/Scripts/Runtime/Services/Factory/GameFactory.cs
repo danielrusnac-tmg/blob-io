@@ -1,10 +1,13 @@
-﻿using BlobIO.Services.AssetManagement;
+﻿using BlobIO.Gameplay.Cameras;
+using BlobIO.Services.AssetManagement;
 using UnityEngine;
 
 namespace BlobIO.Services.Factory
 {
     public class GameFactory : IGameFactory
     {
+        private GameObject _player;
+        private GameplayCamera _gameplayCamera;
         private readonly IAssetProvider _assetProvider;
 
         public GameFactory(IAssetProvider assetProvider)
@@ -12,10 +15,25 @@ namespace BlobIO.Services.Factory
             _assetProvider = assetProvider;
         }
 
-        public GameObject CreatePlayer(Vector3 position)
+        public void CreatePlayer(Vector3 position)
         {
             GameObject playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
-            return Object.Instantiate(playerPrefab, position, Quaternion.identity);
+            _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
+            
+            CreateCamera(_player.transform);
+        }
+
+        public void Cleanup()
+        {
+            Object.Destroy(_gameplayCamera);
+            Object.Destroy(_player);
+        }
+
+        private void CreateCamera(Transform player)
+        {
+            GameObject cameraPrefab = _assetProvider.Load(AssetPaths.CAMERA);
+            _gameplayCamera = Object.Instantiate(cameraPrefab).GetComponent<GameplayCamera>();
+            _gameplayCamera.SetTarget(player);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace BlobIO.Infrastructure.States
 {
     public class GameStateMachine
     {
-        private Dictionary<Type, IGameState> _stateByType;
+        private readonly Dictionary<Type, IGameState> _stateByType;
         private IGameState _currentState;
 
         public GameStateMachine(AllServices services)

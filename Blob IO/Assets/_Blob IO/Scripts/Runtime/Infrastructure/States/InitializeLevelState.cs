@@ -19,6 +19,7 @@ namespace BlobIO.Infrastructure.States
 
         public void Exit()
         {
+            _gameFactory.Cleanup();
         }
     }
 }
