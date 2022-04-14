@@ -4,39 +4,51 @@ using UnityEngine;
 namespace BlobIO.Gameplay
 {
     [Serializable]
-    public class Spring
+    public class Spring : ICloneable
     {
-        [SerializeField] private float _length;
-        [SerializeField] private float _stiffness;
-        [SerializeField] private float _damp;
+        public float Length;
+        public float Stiffness;
+        public float Damp;
 
         private Vector2 _lastOffset;
         private Vector2 _velocity;
 
         public Spring()
         {
-            _length = 2f;
-            _stiffness = 500f;
-            _damp = 16f;
+            Length = 2f;
+            Stiffness = 500f;
+            Damp = 16f;
         }
 
         public Spring(float length, float stiffness, float damp)
         {
-            _length = length;
-            _stiffness = stiffness;
-            _damp = damp;
+            Length = length;
+            Stiffness = stiffness;
+            Damp = damp;
         }
 
-        public Vector2 CalculateForce(Vector2 staticPoint, Vector2 dynamicPoint)
+        public Spring(Spring parent)
+        {
+            Length = parent.Length;
+            Stiffness = parent.Stiffness;
+            Damp = parent.Damp;
+        }
+
+        public Vector2 CalculateForce(Vector2 staticPoint, Vector2 dynamicPoint, float deltaTime)
         {
             Vector2 offset = dynamicPoint - staticPoint;
-            _velocity = (offset - _lastOffset) / Time.fixedDeltaTime;
+            _velocity = (offset - _lastOffset) / deltaTime;
             _lastOffset = offset;
             
-            Vector2 force = offset.magnitude / _length * -_stiffness * offset.normalized;
-            force -= _damp * _velocity;
+            Vector2 force = offset.magnitude / Length * -Stiffness * offset.normalized;
+            force -= Damp * _velocity;
 
             return force;
+        }
+
+        public object Clone()
+        {
+            return new Spring(Length, Stiffness, Damp);
         }
     }
 }
