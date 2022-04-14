@@ -1,7 +1,12 @@
 using UnityEngine;
 
-namespace _Blob_IO.Scripts.Runtime
+namespace BlobIO.Gameplay
 {
+    public class Tentacle
+    {
+        
+    }
+
     public class Blob : MonoBehaviour
     {
     }
