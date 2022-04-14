@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BlobIO.Gameplay
 {
-    public class Blob : MonoBehaviour
+    public class RaysBlob : MonoBehaviour
     {
         [SerializeField] private int _tentacleCount = 10;
         [SerializeField] private float _radius = 5f;
