@@ -1,4 +1,4 @@
-﻿namespace BlobIO.Gameplay.Blobs.Controllers
+﻿namespace BlobIO.Gameplay.Controllers
 {
     public interface IControllable
     {

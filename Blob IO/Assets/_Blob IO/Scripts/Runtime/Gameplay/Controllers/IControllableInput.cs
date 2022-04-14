@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Gameplay.Blobs.Controllers
+namespace BlobIO.Gameplay.Controllers
 {
     public interface IControllableInput
     {
-        Vector2 Movement { get; }
+        Vector2 MoveDirection { get; }
     }
 }

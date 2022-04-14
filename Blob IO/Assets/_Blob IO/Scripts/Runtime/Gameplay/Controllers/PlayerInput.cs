@@ -1,7 +1,7 @@
 ﻿using BlobIO.Services.Input;
 using UnityEngine;
 
-namespace BlobIO.Gameplay.Blobs.Controllers
+namespace BlobIO.Gameplay.Controllers
 {
     public class PlayerInput : IControllableInput
     {
@@ -12,6 +12,6 @@ namespace BlobIO.Gameplay.Blobs.Controllers
             _inputService = inputService;
         }
 
-        public Vector2 Movement => _inputService.Axis;
+        public Vector2 MoveDirection => _inputService.Axis;
     }
 }

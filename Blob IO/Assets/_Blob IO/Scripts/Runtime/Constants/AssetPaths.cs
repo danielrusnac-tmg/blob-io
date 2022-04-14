@@ -1,4 +1,4 @@
-﻿namespace BlobIO.Services.AssetManagement
+﻿namespace BlobIO
 {
     public static class AssetPaths
     {

@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 7298886419052924728}
   - component: {fileID: 7298886419052924729}
   - component: {fileID: 7298886419052924726}
-  - component: {fileID: 7298886419052924727}
+  - component: {fileID: 7154037129208575820}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -123,7 +123,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7298886419052924731}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -152,7 +152,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &7298886419052924727
+--- !u!114 &7154037129208575820
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,3 +168,36 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _radius: 8
+  _angleBias:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -1
+      inSlope: 522.9359
+      outSlope: 522.9359
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.003795065
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 0.02570696
+      outSlope: 0.02570696
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 1
+      outWeight: 0.9999993
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 530.9696
+      outSlope: 530.9696
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.003795743
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

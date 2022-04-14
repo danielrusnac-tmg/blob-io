@@ -1,5 +1,5 @@
-﻿using BlobIO.Gameplay.Blobs.Controllers;
-using BlobIO.Gameplay.Cameras;
+﻿using BlobIO.Gameplay.Cameras;
+using BlobIO.Gameplay.Controllers;
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Input;
 using UnityEngine;
@@ -24,7 +24,7 @@ namespace BlobIO.Services.Factory
             GameObject playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
             _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
             _player.GetComponent<IControllable>().SetInput(new PlayerInput(_inputService));
-            
+
             CreateCamera(_player.transform);
         }
 
