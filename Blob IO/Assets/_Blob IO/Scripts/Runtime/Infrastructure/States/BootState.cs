@@ -7,7 +7,7 @@ namespace BlobIO.Infrastructure.States
 {
     public class BootState : IGameState
     {
-        private GameStateMachine _stateMachine;
+        private readonly GameStateMachine _stateMachine;
 
         public BootState(AllServices services, GameStateMachine stateMachine)
         {
@@ -19,7 +19,7 @@ namespace BlobIO.Infrastructure.States
         {
             services.RegisterSingle<IInputService>(new SimpleInputService());
             services.RegisterSingle<IAssetProvider>(new AssetProvider());
-            services.RegisterSingle<IGameFactory>(new GameFactory(services.Single<IAssetProvider>()));
+            RegisterGameFactory(services);
         }
 
         public void Enter()
@@ -29,6 +29,13 @@ namespace BlobIO.Infrastructure.States
 
         public void Exit()
         {
+        }
+
+        private static void RegisterGameFactory(AllServices services)
+        {
+            services.RegisterSingle<IGameFactory>(new GameFactory(
+                    services.Single<IAssetProvider>(), 
+                    services.Single<IInputService>()));
         }
     }
 }
