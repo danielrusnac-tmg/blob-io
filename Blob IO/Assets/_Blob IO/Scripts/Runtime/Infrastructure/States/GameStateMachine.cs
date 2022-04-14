@@ -9,11 +9,11 @@ namespace BlobIO.Infrastructure.States
         private Dictionary<Type, IGameState> _stateByType;
         private IGameState _currentState;
 
-        public GameStateMachine(AllServices allServices)
+        public GameStateMachine(AllServices services)
         {
             _stateByType = new Dictionary<Type, IGameState>
             {
-                {typeof(BootState), new BootState(allServices)},
+                {typeof(BootState), new BootState(services)},
                 {typeof(GameLoopState), new GameLoopState()}
             };
         }

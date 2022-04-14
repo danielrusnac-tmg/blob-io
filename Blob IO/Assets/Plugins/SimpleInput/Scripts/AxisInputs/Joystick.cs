@@ -6,6 +6,8 @@ namespace SimpleInputNamespace
 {
 	public class Joystick : MonoBehaviour, ISimpleInputDraggable
 	{
+		private const float ANIMATION_SPEED = 20f;
+		
 		public enum MovementAxes { XandY, X, Y };
 
 		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
@@ -207,9 +209,9 @@ namespace SimpleInputNamespace
 				return;
 
 			if( joystickHeld )
-				opacity = Mathf.Min( 1f, opacity + Time.unscaledDeltaTime * 4f );
+				opacity = Mathf.Min( 1f, opacity + Time.unscaledDeltaTime * ANIMATION_SPEED);
 			else
-				opacity = Mathf.Max( 0f, opacity - Time.unscaledDeltaTime * 4f );
+				opacity = Mathf.Max( 0f, opacity - Time.unscaledDeltaTime * ANIMATION_SPEED);
 
 			Color c = thumb.color;
 			c.a = opacity;
