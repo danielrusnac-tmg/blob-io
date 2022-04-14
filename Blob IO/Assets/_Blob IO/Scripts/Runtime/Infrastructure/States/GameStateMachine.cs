@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BlobIO.Services;
+using BlobIO.Services.Factory;
 
 namespace BlobIO.Infrastructure.States
 {
@@ -13,8 +14,8 @@ namespace BlobIO.Infrastructure.States
         {
             _stateByType = new Dictionary<Type, IGameState>
             {
-                {typeof(BootState), new BootState(services)},
-                {typeof(GameLoopState), new GameLoopState()}
+                {typeof(BootState), new BootState(services, this)},
+                {typeof(InitializeLevelState), new InitializeLevelState(services.Single<IGameFactory>())}
             };
         }
 

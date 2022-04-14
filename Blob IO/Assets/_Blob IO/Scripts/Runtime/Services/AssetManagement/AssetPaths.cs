@@ -2,6 +2,6 @@
 {
     public static class AssetPaths
     {
-        public const string PLAYER = "Playerl";
+        public const string PLAYER = "Player";
     }
 }

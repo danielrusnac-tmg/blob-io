@@ -7,8 +7,11 @@ namespace BlobIO.Infrastructure.States
 {
     public class BootState : IGameState
     {
-        public BootState(AllServices services)
+        private GameStateMachine _stateMachine;
+
+        public BootState(AllServices services, GameStateMachine stateMachine)
         {
+            _stateMachine = stateMachine;
             RegisterServices(services);
         }
 
@@ -21,6 +24,7 @@ namespace BlobIO.Infrastructure.States
 
         public void Enter()
         {
+            _stateMachine.Enter<InitializeLevelState>();
         }
 
         public void Exit()
