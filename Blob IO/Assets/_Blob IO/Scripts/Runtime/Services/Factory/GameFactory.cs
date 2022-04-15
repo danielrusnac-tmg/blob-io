@@ -33,18 +33,7 @@ namespace BlobIO.Services.Factory
         {
             GlobalSettings globalSettings = await _assetProvider.Load<GlobalSettings>(AssetPaths.GLOBAL_SETTINGS);
             BlobSettings blobSettings = await _assetProvider.Load<BlobSettings>(AssetPaths.PLAYER_BLOB_SETTINGS);
-            GameObject playerPrefab = null;
-            
-            switch (globalSettings.PlayerType)
-            {
-                case PlayerType.WithParts:
-                    playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER_WITH_PARTS);
-                    break;
-                
-                default:
-                    playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER);
-                    break;
-            }
+            GameObject playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER);
            
             _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
             _player.GetComponent<Blob>().Construct(globalSettings, blobSettings);
