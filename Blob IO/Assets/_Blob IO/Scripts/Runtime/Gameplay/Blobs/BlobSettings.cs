@@ -19,20 +19,12 @@ namespace BlobIO.Gameplay.Blobs
         public float DesireThreshold => _desireThreshold;
         public float RemoveDesireThreshold => _removeDesireThreshold;
         public float Radius => _radius;
+        public float Stiffness => _stiffness;
+        public float Damp => _damp;
 
         public float GetRandomAngleOffset()
         {
             return _angleBias.Evaluate(Random.value) * 180f;
-        }
-
-        public Spring CreateSpring()
-        {
-            return CreateSpring(_radius);
-        }
-        
-        public Spring CreateSpring(float radius)
-        {
-            return new Spring(radius, _stiffness, _damp);
         }
     }
 }

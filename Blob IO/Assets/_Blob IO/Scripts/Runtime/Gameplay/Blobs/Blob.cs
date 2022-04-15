@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using BlobIO.Gameplay.Blobs.Tentacles;
 using BlobIO.Gameplay.Controllers;
 using UnityEditor;
 using UnityEngine;
@@ -9,8 +10,11 @@ namespace BlobIO.Gameplay.Blobs
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable
     {
+        private const float BLOB_RADIUS = 0f;
         private const int MAX_TRY_POINT = 3;
-        
+
+        [SerializeField] private Tentacle _tentaclePrefab;
+
         private bool _hasAController;
         private bool _isMoving;
         private Vector2 _moveDirection = Vector2.right;
@@ -40,12 +44,7 @@ namespace BlobIO.Gameplay.Blobs
         {
             ReadInput();
         }
-
-        private void FixedUpdate()
-        {
-            ApplyTentacleForces();
-        }
-
+        
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
@@ -80,18 +79,6 @@ namespace BlobIO.Gameplay.Blobs
             _isMoving = true;
         }
 
-        private void ApplyTentacleForces()
-        {
-            Vector2 force = Vector2.zero;
-
-            foreach (Tentacle activeTentacle in _activeTentacles)
-            {
-                force += activeTentacle.CalculateForce(Time.fixedDeltaTime);
-            }
-
-            _rb.AddForce(force * _rb.mass);
-        }
-
         private IEnumerator UpdateTentaclesRoutine()
         {
             while (true)
@@ -109,18 +96,30 @@ namespace BlobIO.Gameplay.Blobs
         private void UpdateTentacleCount()
         {
             if (_activeTentacles.Count < _blobSettings.WantedTentacleCount)
+                TryAnnNewTentacle();
+        }
+
+        private void TryAnnNewTentacle()
+        {
+            for (int i = 0; i < MAX_TRY_POINT; i++)
             {
-                CreateTentacle();
+                float angle = _blobSettings.GetRandomAngleOffset();
+                Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
+                Vector2 origin = (Vector2)transform.position + direction * BLOB_RADIUS;
+
+                if (Physics2D.RaycastNonAlloc(origin, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
+                    _activeTentacles.Add(CreateTentacle(origin));
             }
         }
 
-        private void CreateTentacle()
+        private Tentacle CreateTentacle(Vector2 origin)
         {
-            if (!TryGetRandomDesiredPoint(out Vector2 point, out float distance))
-                return;
-            
-            Tentacle tentacle = new Tentacle(_blobSettings.CreateSpring(distance), transform, point);
-            _activeTentacles.Add(tentacle);
+            Tentacle tentacle = Instantiate(_tentaclePrefab, transform);
+            TentaclePoint basePoint = new TentaclePoint(gameObject, origin);
+            TentaclePoint topPoint = new TentaclePoint(_tentacleHits[0].collider.gameObject, _tentacleHits[0].point);
+
+            tentacle.Construct(basePoint, topPoint, _blobSettings.Stiffness, _blobSettings.Damp);
+            return tentacle;
         }
 
         private void RemoveUnwantedTentacle()
@@ -130,7 +129,7 @@ namespace BlobIO.Gameplay.Blobs
             
             foreach (Tentacle tentacle in _activeTentacles)
             {
-                float desirability = CalculateDesirability(tentacle.Point);
+                float desirability = CalculateDesirability(tentacle.TipPoint);
 
                 if (desirability < minDesirability)
                 {
@@ -143,26 +142,7 @@ namespace BlobIO.Gameplay.Blobs
                 return;
 
             _activeTentacles.Remove(unwantedTentacle);
-        }
-
-        private bool TryGetRandomDesiredPoint(out Vector2 point, out float radius)
-        {
-            for (int i = 0; i < MAX_TRY_POINT; i++)
-            {
-                float angle = _blobSettings.GetRandomAngleOffset();
-                Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
-
-                if (Physics2D.RaycastNonAlloc(transform.position, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
-                {
-                    radius = _tentacleHits[0].distance; 
-                    point = _tentacleHits[0].point;
-                    return true;
-                }
-            }
-
-            radius = 0f;
-            point = Vector2.zero;
-            return false;
+            Destroy(unwantedTentacle.gameObject);
         }
 
         private float CalculateDesirability(Vector2 point)
