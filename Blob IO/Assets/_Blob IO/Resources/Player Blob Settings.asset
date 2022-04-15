@@ -18,7 +18,7 @@ MonoBehaviour:
   _removeDesireThreshold: -0.1
   _radius: 8
   _stiffness: 42
-  _damp: 0.4
+  _damp: 0.3
   _angleBias:
     serializedVersion: 2
     m_Curve:

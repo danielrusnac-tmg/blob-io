@@ -31,6 +31,10 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
                 _dynamicPointCount++;
         }
 
+        public void UpdateDesirability()
+        {
+        }
+
         private void FixedUpdate()
         {
             Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position) / _dynamicPointCount;
