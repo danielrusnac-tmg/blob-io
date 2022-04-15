@@ -164,5 +164,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b58470ca6d464d08a50fff2e0e007280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blobRadius: 0.45
+  _blobRadius: 0.35
   _tentaclePrefab: {fileID: 7399534123103511166, guid: c5cf220aabb787a48a8bc21a5a3bfaf9, type: 3}
