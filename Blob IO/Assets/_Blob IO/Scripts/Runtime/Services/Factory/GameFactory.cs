@@ -1,4 +1,7 @@
-﻿using BlobIO.Gameplay.Cameras;
+﻿using System.Threading.Tasks;
+using BlobIO.Gameplay;
+using BlobIO.Gameplay.Blobs;
+using BlobIO.Gameplay.Cameras;
 using BlobIO.Gameplay.Controllers;
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Input;
@@ -19,11 +22,17 @@ namespace BlobIO.Services.Factory
             _inputService = inputService;
         }
 
-        public void CreatePlayer(Vector3 position)
+        public async void CreatePlayer(Vector3 position)
         {
-            GameObject playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
-            _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
+            Task<GameObject> playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
+            Task<GlobalSettings> globalSettings = _assetProvider.Load<GlobalSettings>(AssetPaths.GLOBAL_SETTINGS);
+            Task<BlobSettings> blobSettings = _assetProvider.Load<BlobSettings>(AssetPaths.PLAYER_BLOB_SETTINGS);
+
+            await Task.WhenAll(playerPrefab, globalSettings, blobSettings);
+            
+            _player = Object.Instantiate(playerPrefab.Result, position, Quaternion.identity);
             _player.GetComponent<IControllable>().SetInput(new PlayerInput(_inputService));
+            _player.GetComponent<Blob>().Construct(globalSettings.Result, blobSettings.Result);
 
             CreateCamera(_player.transform);
         }
@@ -34,9 +43,9 @@ namespace BlobIO.Services.Factory
             Object.Destroy(_player);
         }
 
-        private void CreateCamera(Transform player)
+        private async void CreateCamera(Transform player)
         {
-            GameObject cameraPrefab = _assetProvider.Load(AssetPaths.CAMERA);
+            GameObject cameraPrefab = await _assetProvider.Load(AssetPaths.CAMERA);
             _gameplayCamera = Object.Instantiate(cameraPrefab).GetComponent<GameplayCamera>();
             _gameplayCamera.SetTarget(player);
         }

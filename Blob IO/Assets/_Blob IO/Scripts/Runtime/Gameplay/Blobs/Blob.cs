@@ -7,14 +7,8 @@ namespace BlobIO.Gameplay.Blobs
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable
     {
-        [SerializeField] private LayerMask _wallMask;
-        [SerializeField] private float _radius = 8f;
-        [SerializeField] private float _desireTreshold;
-        [SerializeField] private Spring _spring;
-
-        [Tooltip("Starts aligned with the movement direction.")]
-        [SerializeField] private AnimationCurve _angleBias = AnimationCurve.Constant(0f, 1f, 1f);
-
+        private GlobalSettings _globalSettings;
+        private BlobSettings _blobSettings;
         private bool _hasAController;
         private bool _isMoving;
         private Vector2 _desiredPoint;
@@ -22,6 +16,12 @@ namespace BlobIO.Gameplay.Blobs
         private IControllableInput _input;
         private Rigidbody2D _rb;
         private RaycastHit2D[] _tentacleHits;
+
+        public void Construct(GlobalSettings globalSettings, BlobSettings blobSettings)
+        {
+            _globalSettings = globalSettings;
+            _blobSettings = blobSettings;
+        }
 
         private void Awake()
         {
@@ -37,15 +37,17 @@ namespace BlobIO.Gameplay.Blobs
 
         private void FixedUpdate()
         {
-            Vector2 force = _spring.CalculateForce(_desiredPoint, transform.position, Time.fixedDeltaTime);
-            _rb.AddForce(force * _rb.mass);
+            // Vector2 force = _spring.CalculateForce(_desiredPoint, transform.position, Time.fixedDeltaTime);
+            // _rb.AddForce(force * _rb.mass);
         }
 
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
-            Handles.DrawWireDisc(transform.position, Vector3.forward, _radius);
-            Handles.DrawLine(transform.position, transform.position + (Vector3) _moveDirection * _radius);
+            float radius = _blobSettings ? _blobSettings.Radius : 8f;
+            
+            Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
+            Handles.DrawLine(transform.position, transform.position + (Vector3) _moveDirection * radius);
             
             Handles.color = Color.red;
             Handles.DrawSolidDisc(_desiredPoint, Vector3.forward, 0.2f);
@@ -80,15 +82,15 @@ namespace BlobIO.Gameplay.Blobs
 
             for (int i = 0; i < 10; i++)
             {
-                float angle = GetRandomAngle();
+                float angle = _blobSettings.GetRandomAngleOffset();
                 Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
 
-                if (Physics2D.RaycastNonAlloc(transform.position, direction, _tentacleHits, _radius, _wallMask) > 0)
+                if (Physics2D.RaycastNonAlloc(transform.position, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
                 {
                     float currentDesirability = EvaluateDesirability(_desiredPoint);
                     float wantedDesirability = EvaluateDesirability(_tentacleHits[0].point);
                     
-                    if (wantedDesirability - currentDesirability > _desireTreshold)
+                    if (wantedDesirability - currentDesirability > _blobSettings.DesireThreshold)
                         _desiredPoint = _tentacleHits[0].point;
                     
                     break;
@@ -96,15 +98,10 @@ namespace BlobIO.Gameplay.Blobs
             }
         }
 
-        private float GetRandomAngle()
-        {
-            return _angleBias.Evaluate(Random.value) * 180f;
-        }
-
         private float EvaluateDesirability(Vector2 point)
         {
             Vector2 offset = point - (Vector2) transform.position;
-            float distance = -offset.magnitude / _radius;
+            float distance = -offset.magnitude / _blobSettings.Radius;
             float angle = Vector2.Dot(offset.normalized, _moveDirection);
 
             return distance + angle;

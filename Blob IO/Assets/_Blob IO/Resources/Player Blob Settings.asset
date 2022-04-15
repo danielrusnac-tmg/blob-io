@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c174eefab13845f7b2631ba9edc4cc18, type: 3}
+  m_Name: Player Blob Settings
+  m_EditorClassIdentifier: 
+  _radius: 8
+  _desireThreshold: 0
+  _stiffness: 100
+  _damp: 2
+  _angleBias:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -1
+      inSlope: 522.9359
+      outSlope: 522.9359
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.003795065
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 0.02570696
+      outSlope: 0.02570696
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 1
+      outWeight: 0.9999993
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 530.9696
+      outSlope: 530.9696
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.003795743
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

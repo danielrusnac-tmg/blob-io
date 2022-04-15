@@ -18,7 +18,7 @@ namespace BlobIO.Infrastructure.States
         private static void RegisterServices(AllServices services)
         {
             services.RegisterSingle<IInputService>(new SimpleInputService());
-            services.RegisterSingle<IAssetProvider>(new AssetProvider());
+            services.RegisterSingle<IAssetProvider>(new ResourcesAssetProvider());
             RegisterGameFactory(services);
         }
 

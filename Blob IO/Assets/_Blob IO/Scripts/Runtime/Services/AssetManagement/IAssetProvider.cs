@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace BlobIO.Services.AssetManagement
 {
     public interface IAssetProvider : IService
     {
-        GameObject Load(string path);
+        Task<T> Load<T>(string path) where T : Object;
+        Task<GameObject> Load(string path);
     }
 }
