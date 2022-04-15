@@ -5,6 +5,8 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 {
     public class Tentacle : MonoBehaviour
     {
+        [SerializeField] private LineRenderer _lineRenderer;
+
         private int _dynamicPointCount;
         private float _length;
         private float _stiffness;
@@ -18,32 +20,37 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 
         public Vector2 TipPoint => _tipPoint.Position;
 
-        public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp, float verticalOffset)
+        public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
+            float verticalOffset)
         {
             _verticalOffset = verticalOffset;
             _basePoint = basePoint;
             _tipPoint = tipPoint;
             _stiffness = stiffness;
             _damp = damp;
-            _length = Mathf.Max(Vector2.Distance(_basePoint.Position, _tipPoint.Position), Constants.MIN_TENTACLE_LENGTH);
+            _length = Mathf.Max(Vector2.Distance(_basePoint.Position, _tipPoint.Position),
+                Constants.MIN_TENTACLE_LENGTH);
 
             _dynamicPointCount = 1;
-            
+
             if (_basePoint.IsDynamic || _tipPoint.IsDynamic)
                 _dynamicPointCount++;
         }
 
-        public void UpdateDesirability()
+        private void Update()
         {
+            _lineRenderer.SetPosition(0, _basePoint.Position);
+            _lineRenderer.SetPosition(1, _tipPoint.Position);
         }
 
         private void FixedUpdate()
         {
-            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) / _dynamicPointCount;
+            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) /
+                            _dynamicPointCount;
             _basePoint.AddForce(force);
             _tipPoint.AddForce(-force);
         }
-        
+
         private Vector2 CalculateForce(Vector2 staticPoint, Vector2 dynamicPoint)
         {
             Vector2 offset = dynamicPoint - staticPoint;
@@ -56,13 +63,13 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 
             return force;
         }
-        
+
         public void DrawGizmos()
         {
 #if UNITY_EDITOR
             if (_basePoint == null || _tipPoint == null)
                 return;
-            
+
             Handles.color = Color.green;
             Handles.DrawSolidDisc(_basePoint.Position, Vector3.forward, 0.1f);
 

@@ -39,6 +39,7 @@ namespace BlobIO.Gameplay.SoftBodies
 
             _springs = new Spring[pointCount * 2];
             int springIndex = 0;
+            
             for (int i = 0; i < pointCount; i++)
             {
                 _springs[springIndex] = new Spring(i, (int) Mathf.Repeat(i - 1, pointCount));
