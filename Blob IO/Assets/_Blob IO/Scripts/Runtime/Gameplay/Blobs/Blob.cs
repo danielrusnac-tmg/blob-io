@@ -1,4 +1,6 @@
-﻿using BlobIO.Gameplay.Controllers;
+﻿using System.Collections;
+using System.Collections.Generic;
+using BlobIO.Gameplay.Controllers;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,20 +9,25 @@ namespace BlobIO.Gameplay.Blobs
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable
     {
-        private GlobalSettings _globalSettings;
-        private BlobSettings _blobSettings;
+        private const int MAX_TRY_POINT = 3;
+        
         private bool _hasAController;
         private bool _isMoving;
-        private Vector2 _desiredPoint;
         private Vector2 _moveDirection = Vector2.right;
-        private IControllableInput _input;
-        private Rigidbody2D _rb;
         private RaycastHit2D[] _tentacleHits;
+        private Rigidbody2D _rb;
+        private GlobalSettings _globalSettings;
+        private BlobSettings _blobSettings;
+        private IControllableInput _input;
+        private List<Tentacle> _activeTentacles = new List<Tentacle>();
 
         public void Construct(GlobalSettings globalSettings, BlobSettings blobSettings)
         {
             _globalSettings = globalSettings;
             _blobSettings = blobSettings;
+            _activeTentacles = new List<Tentacle>();
+
+            StartCoroutine(UpdateTentaclesRoutine());
         }
 
         private void Awake()
@@ -32,13 +39,23 @@ namespace BlobIO.Gameplay.Blobs
         private void Update()
         {
             ReadInput();
-            UpdateTentacles();
         }
 
         private void FixedUpdate()
         {
-            // Vector2 force = _spring.CalculateForce(_desiredPoint, transform.position, Time.fixedDeltaTime);
-            // _rb.AddForce(force * _rb.mass);
+            ApplyTentacleForces();
+        }
+
+        private void ApplyTentacleForces()
+        {
+            Vector2 force = Vector2.zero;
+
+            foreach (Tentacle activeTentacle in _activeTentacles)
+            {
+                force += activeTentacle.CalculateForce(Time.fixedDeltaTime);
+            }
+
+            _rb.AddForce(force * _rb.mass);
         }
 
         private void OnDrawGizmos()
@@ -49,8 +66,8 @@ namespace BlobIO.Gameplay.Blobs
             Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
             Handles.DrawLine(transform.position, transform.position + (Vector3) _moveDirection * radius);
             
-            Handles.color = Color.red;
-            Handles.DrawSolidDisc(_desiredPoint, Vector3.forward, 0.2f);
+           foreach (Tentacle tentacle in _activeTentacles)
+               tentacle.DrawGizmos();
 #endif
         }
 
@@ -75,30 +92,89 @@ namespace BlobIO.Gameplay.Blobs
             _isMoving = true;
         }
 
-        private void UpdateTentacles()
+        private IEnumerator UpdateTentaclesRoutine()
         {
-            if (!_isMoving)
+            while (true)
+            {
+                if (_isMoving)
+                {
+                    RemoveUnwantedTentacle();
+                    UpdateTentacleCount();
+                }
+
+                yield return new WaitForSeconds(_blobSettings.UpdateTentaclesDelay);
+            }
+        }
+
+        private void UpdateTentacleCount()
+        {
+            if (_activeTentacles.Count < _blobSettings.WantedTentacleCount)
+            {
+                CreateTentacle();
+            }
+        }
+
+        private void CreateTentacle()
+        {
+            if (!TryGetRandomDesiredPoint(out Vector2 point, out float distance))
+                return;
+            
+            Tentacle tentacle = new Tentacle(_blobSettings.CreateSpring(distance), transform, point);
+            _activeTentacles.Add(tentacle);
+            
+            // if (TryGetRandomDesiredPoint(out Vector2 point))
+            // {
+                // float currentDesirability = CalculateDesirability(_desiredPoint);
+                // float wantedDesirability = CalculateDesirability(point);
+                    
+                // if (wantedDesirability - currentDesirability > _blobSettings.DesireThreshold)
+                    // _desiredPoint = point;
+            // }
+        }
+
+        private void RemoveUnwantedTentacle()
+        {
+            float minDesirability = float.MaxValue;
+            Tentacle unwantedTentacle = null;
+            
+            foreach (Tentacle tentacle in _activeTentacles)
+            {
+                float desirability = CalculateDesirability(tentacle.Point);
+
+                if (desirability < minDesirability)
+                {
+                    minDesirability = desirability;
+                    unwantedTentacle = tentacle;
+                }
+            }
+            
+            if (unwantedTentacle == null || minDesirability > _blobSettings.RemoveDesireThreshold)
                 return;
 
-            for (int i = 0; i < 10; i++)
+            _activeTentacles.Remove(unwantedTentacle);
+        }
+
+        private bool TryGetRandomDesiredPoint(out Vector2 point, out float radius)
+        {
+            for (int i = 0; i < MAX_TRY_POINT; i++)
             {
                 float angle = _blobSettings.GetRandomAngleOffset();
                 Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
 
                 if (Physics2D.RaycastNonAlloc(transform.position, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
                 {
-                    float currentDesirability = EvaluateDesirability(_desiredPoint);
-                    float wantedDesirability = EvaluateDesirability(_tentacleHits[0].point);
-                    
-                    if (wantedDesirability - currentDesirability > _blobSettings.DesireThreshold)
-                        _desiredPoint = _tentacleHits[0].point;
-                    
-                    break;
+                    radius = _tentacleHits[0].distance; 
+                    point = _tentacleHits[0].point;
+                    return true;
                 }
             }
+
+            radius = 0f;
+            point = Vector2.zero;
+            return false;
         }
 
-        private float EvaluateDesirability(Vector2 point)
+        private float CalculateDesirability(Vector2 point)
         {
             Vector2 offset = point - (Vector2) transform.position;
             float distance = -offset.magnitude / _blobSettings.Radius;

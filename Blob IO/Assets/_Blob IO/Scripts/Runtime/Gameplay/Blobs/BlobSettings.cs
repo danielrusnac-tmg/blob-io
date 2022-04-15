@@ -5,14 +5,20 @@ namespace BlobIO.Gameplay.Blobs
     [CreateAssetMenu(fileName = "New Blob Settings", menuName = CreationPaths.BLOBS + "Blob Settings")]
     public class BlobSettings : ScriptableObject
     {
-        [SerializeField] private float _radius = 8f;
+        [SerializeField] private float _updateTentaclesDelay = 0.2f;
+        [SerializeField] private int _wantedTentacleCount = 7;
         [SerializeField] private float _desireThreshold;
+        [SerializeField] private float _removeDesireThreshold = -1f;
+        [SerializeField] private float _radius = 8f;
         [SerializeField] private float _stiffness = 100f;
         [SerializeField] private float _damp = 2f;
         [SerializeField] private AnimationCurve _angleBias = AnimationCurve.Constant(0f, 1f, 1f);
 
-        public float Radius => _radius;
+        public float UpdateTentaclesDelay => _updateTentaclesDelay;
+        public int WantedTentacleCount => _wantedTentacleCount;
         public float DesireThreshold => _desireThreshold;
+        public float RemoveDesireThreshold => _removeDesireThreshold;
+        public float Radius => _radius;
 
         public float GetRandomAngleOffset()
         {
@@ -21,7 +27,12 @@ namespace BlobIO.Gameplay.Blobs
 
         public Spring CreateSpring()
         {
-            return new Spring(_radius, _stiffness, _damp);
+            return CreateSpring(_radius);
+        }
+        
+        public Spring CreateSpring(float radius)
+        {
+            return new Spring(radius, _stiffness, _damp);
         }
     }
 }

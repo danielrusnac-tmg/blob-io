@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c174eefab13845f7b2631ba9edc4cc18, type: 3}
   m_Name: Player Blob Settings
   m_EditorClassIdentifier: 
-  _radius: 8
+  _updateTentaclesDelay: 0.05
+  _wantedTentacleCount: 7
   _desireThreshold: 0
-  _stiffness: 100
-  _damp: 2
+  _removeDesireThreshold: -0.1
+  _radius: 8
+  _stiffness: 14
+  _damp: 0.2
   _angleBias:
     serializedVersion: 2
     m_Curve:

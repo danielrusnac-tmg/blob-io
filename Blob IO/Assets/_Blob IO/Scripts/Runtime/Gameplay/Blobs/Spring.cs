@@ -12,6 +12,8 @@ namespace BlobIO.Gameplay
 
         private Vector2 _lastOffset;
         private Vector2 _velocity;
+        
+        public float Compression { get; private set; }
 
         public Spring()
         {
@@ -39,8 +41,9 @@ namespace BlobIO.Gameplay
             Vector2 offset = dynamicPoint - staticPoint;
             _velocity = (offset - _lastOffset) / deltaTime;
             _lastOffset = offset;
-            
-            Vector2 force = offset.magnitude / Length * -Stiffness * offset.normalized;
+
+            Compression = offset.magnitude / Length;
+            Vector2 force = Compression * -Stiffness * offset.normalized;
             force -= Damp * _velocity;
 
             return force;
