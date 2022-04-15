@@ -6,6 +6,7 @@ namespace BlobIO.Gameplay.SoftBodies
 {
     public class SoftBody : MonoBehaviour
     {
+        [SerializeField] private LayerMask _solidMask;
         [SerializeField] private float _mass = 10f;
         [SerializeField] private float _resolution = 0.1f;
         [SerializeField] private float _area = 10f;
@@ -15,16 +16,47 @@ namespace BlobIO.Gameplay.SoftBodies
         private MassPoint[] _points;
         private Spring[] _springs;
 
-        private void Update()
-        {
-            CreatePoints();
-        }
-
-        private void CreatePoints()
+        public void Construct()
         {
             float radius = Mathf.Sqrt(_area / Mathf.PI);
             float perimeter = 2 * Mathf.PI * radius;
             int pointCount = (int) (perimeter / _resolution);
+            
+            CreatePoints(pointCount, radius);
+            CreateSprings(pointCount);
+        }
+
+        private void Awake()
+        {
+            Construct();
+        }
+
+        private void FixedUpdate()
+        {
+            for (int i = 0; i < _points.Length; i++)
+            {
+                _points[i].Force = Physics2D.gravity * _points[i].Mass;
+                _points[i].Velocity += _points[i].Force * Time.fixedDeltaTime;
+            }
+
+            for (int i = 0; i < _points.Length; i++)
+            {
+                _points[i].Position += _points[i].Velocity * Time.fixedDeltaTime;
+            }
+            
+            for (int i = 0; i < _points.Length; i++)
+            {
+                Collider2D overlapCollider = Physics2D.OverlapPoint(_points[i].Position, _solidMask);
+
+                if (overlapCollider != null)
+                {
+                    _points[i].Position -= _points[i].Velocity * Time.fixedDeltaTime;
+                }
+            }
+        }
+
+        private void CreatePoints(int pointCount, float radius)
+        {
             float pointMass = pointCount / _mass;
             float angleStep = 360f / pointCount;
 
@@ -36,15 +68,18 @@ namespace BlobIO.Gameplay.SoftBodies
                 Vector2 offset = Quaternion.AngleAxis(angleStep * i, Vector3.forward) * Vector2.right * radius;
                 _points[i] = new MassPoint(center + offset, pointMass);
             }
+        }
 
+        private void CreateSprings(int pointCount)
+        {
             _springs = new Spring[pointCount * 2];
             int springIndex = 0;
-            
+
             for (int i = 0; i < pointCount; i++)
             {
                 _springs[springIndex] = new Spring(i, (int) Mathf.Repeat(i - 1, pointCount));
                 _springs[springIndex + 1] = new Spring(i, (int) Mathf.Repeat(i + 1, pointCount));
-                
+
                 springIndex += 2;
             }
         }

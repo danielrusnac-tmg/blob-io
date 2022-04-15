@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Blob Settings
   m_EditorClassIdentifier: 
   _updateTentaclesDelay: 0.1
-  _wantedTentacleCount: 8
+  _wantedTentacleCount: 7
   _desireThreshold: 0
   _removeDesireThreshold: -0.02
   _radius: 8
