@@ -24,7 +24,6 @@ namespace BlobIO.Services.Input
 
         ~SimpleInputService()
         {
-            Debug.Log("Input destructor");
             _coroutineRunner.StopCoroutine(_tickCoroutine);
         }
 
