@@ -7,9 +7,9 @@ namespace BlobIO.Infrastructure
     {
         private readonly GameStateMachine _stateMachine;
 
-        public Game(AllServices services)
+        public Game(AllServices services, ICoroutineRunner coroutineRunner)
         {
-            _stateMachine = new GameStateMachine(services);
+            _stateMachine = new GameStateMachine(services, coroutineRunner);
         }
 
         public void Run()

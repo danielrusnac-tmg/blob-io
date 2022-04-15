@@ -22,6 +22,11 @@ namespace BlobIO.Services.Factory
             _inputService = inputService;
         }
 
+        public void Warmup()
+        {
+            
+        }
+
         public async void CreatePlayer(Vector3 position)
         {
             Task<GameObject> playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
@@ -39,7 +44,7 @@ namespace BlobIO.Services.Factory
 
         public void Cleanup()
         {
-            Object.Destroy(_gameplayCamera);
+            Object.Destroy(_gameplayCamera.gameObject);
             Object.Destroy(_player);
         }
 

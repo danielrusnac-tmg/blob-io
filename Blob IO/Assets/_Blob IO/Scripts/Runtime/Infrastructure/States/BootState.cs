@@ -9,22 +9,23 @@ namespace BlobIO.Infrastructure.States
     {
         private readonly GameStateMachine _stateMachine;
 
-        public BootState(AllServices services, GameStateMachine stateMachine)
+        public BootState(GameStateMachine stateMachine, AllServices services, ICoroutineRunner coroutineRunner)
         {
             _stateMachine = stateMachine;
-            RegisterServices(services);
+            RegisterServices(services, coroutineRunner);
         }
 
-        private static void RegisterServices(AllServices services)
+        private static void RegisterServices(AllServices services, ICoroutineRunner coroutineRunner)
         {
-            services.RegisterSingle<IInputService>(new SimpleInputService());
+            services.RegisterSingle<ICoroutineRunner>(coroutineRunner);
+            services.RegisterSingle<IInputService>(new SimpleInputService(coroutineRunner));
             services.RegisterSingle<IAssetProvider>(new ResourcesAssetProvider());
             RegisterGameFactory(services);
         }
 
         public void Enter()
         {
-            _stateMachine.Enter<InitializeLevelState>();
+            _stateMachine.Enter<GameLoopState>();
         }
 
         public void Exit()

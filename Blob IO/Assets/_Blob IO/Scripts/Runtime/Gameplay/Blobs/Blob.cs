@@ -46,18 +46,6 @@ namespace BlobIO.Gameplay.Blobs
             ApplyTentacleForces();
         }
 
-        private void ApplyTentacleForces()
-        {
-            Vector2 force = Vector2.zero;
-
-            foreach (Tentacle activeTentacle in _activeTentacles)
-            {
-                force += activeTentacle.CalculateForce(Time.fixedDeltaTime);
-            }
-
-            _rb.AddForce(force * _rb.mass);
-        }
-
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
@@ -92,6 +80,18 @@ namespace BlobIO.Gameplay.Blobs
             _isMoving = true;
         }
 
+        private void ApplyTentacleForces()
+        {
+            Vector2 force = Vector2.zero;
+
+            foreach (Tentacle activeTentacle in _activeTentacles)
+            {
+                force += activeTentacle.CalculateForce(Time.fixedDeltaTime);
+            }
+
+            _rb.AddForce(force * _rb.mass);
+        }
+
         private IEnumerator UpdateTentaclesRoutine()
         {
             while (true)
@@ -121,15 +121,6 @@ namespace BlobIO.Gameplay.Blobs
             
             Tentacle tentacle = new Tentacle(_blobSettings.CreateSpring(distance), transform, point);
             _activeTentacles.Add(tentacle);
-            
-            // if (TryGetRandomDesiredPoint(out Vector2 point))
-            // {
-                // float currentDesirability = CalculateDesirability(_desiredPoint);
-                // float wantedDesirability = CalculateDesirability(point);
-                    
-                // if (wantedDesirability - currentDesirability > _blobSettings.DesireThreshold)
-                    // _desiredPoint = point;
-            // }
         }
 
         private void RemoveUnwantedTentacle()

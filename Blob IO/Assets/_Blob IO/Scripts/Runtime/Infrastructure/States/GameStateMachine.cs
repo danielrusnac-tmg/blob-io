@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BlobIO.Services;
 using BlobIO.Services.Factory;
+using BlobIO.Services.Input;
 
 namespace BlobIO.Infrastructure.States
 {
@@ -10,12 +11,12 @@ namespace BlobIO.Infrastructure.States
         private readonly Dictionary<Type, IGameState> _stateByType;
         private IGameState _currentState;
 
-        public GameStateMachine(AllServices services)
+        public GameStateMachine(AllServices services, ICoroutineRunner coroutineRunner)
         {
             _stateByType = new Dictionary<Type, IGameState>
             {
-                {typeof(BootState), new BootState(services, this)},
-                {typeof(InitializeLevelState), new InitializeLevelState(services.Single<IGameFactory>())}
+                {typeof(BootState), new BootState(this, services, coroutineRunner)},
+                {typeof(GameLoopState), new GameLoopState(this, services.Single<IGameFactory>(), services.Single<IInputService>())}
             };
         }
 

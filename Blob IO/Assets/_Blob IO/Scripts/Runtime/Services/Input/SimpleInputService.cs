@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using BlobIO.Infrastructure;
+using UnityEngine;
 
 namespace BlobIO.Services.Input
 {
@@ -7,6 +10,39 @@ namespace BlobIO.Services.Input
         private const string HORIZONTAL = "Horizontal";
         private const string VERTICAL = "Vertical";
 
+        private Coroutine _tickCoroutine;
+        private readonly ICoroutineRunner _coroutineRunner;
+
         public Vector2 Axis => new Vector2(SimpleInput.GetAxisRaw(HORIZONTAL), SimpleInput.GetAxisRaw(VERTICAL));
+        public event Action RestartButtonPressed;
+
+        public SimpleInputService(ICoroutineRunner coroutineRunner)
+        {
+            _coroutineRunner = coroutineRunner;
+            _coroutineRunner.StartCoroutine(TickRoutine());
+        }
+
+        ~SimpleInputService()
+        {
+            Debug.Log("Input destructor");
+            _coroutineRunner.StopCoroutine(_tickCoroutine);
+        }
+
+        private IEnumerator TickRoutine()
+        {
+            while (true)
+            {
+                OnTick();
+                yield return null;
+            }
+        }
+
+        private void OnTick()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.R))
+            {
+                RestartButtonPressed?.Invoke();
+            }
+        }
     }
 }
