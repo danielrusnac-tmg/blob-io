@@ -10,20 +10,24 @@ namespace BlobIO.Gameplay.Blobs
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable
     {
-        private const float BLOB_RADIUS = 0f;
         private const int MAX_TRY_POINT = 3;
 
+        [SerializeField] private float _blobRadius = 0.5f;
         [SerializeField] private Tentacle _tentaclePrefab;
 
         private bool _hasAController;
         private bool _isMoving;
         private Vector2 _moveDirection = Vector2.right;
-        private RaycastHit2D[] _tentacleHits;
-        private Rigidbody2D _rb;
+        private static RaycastHit2D[] _tentacleHits;
         private GlobalSettings _globalSettings;
         private BlobSettings _blobSettings;
         private IControllableInput _input;
         private List<Tentacle> _activeTentacles = new List<Tentacle>();
+
+        static Blob()
+        {
+            _tentacleHits = new RaycastHit2D[1];
+        }
 
         public void Construct(GlobalSettings globalSettings, BlobSettings blobSettings)
         {
@@ -32,12 +36,6 @@ namespace BlobIO.Gameplay.Blobs
             _activeTentacles = new List<Tentacle>();
 
             StartCoroutine(UpdateTentaclesRoutine());
-        }
-
-        private void Awake()
-        {
-            _rb = GetComponent<Rigidbody2D>();
-            _tentacleHits = new RaycastHit2D[1];
         }
 
         private void Update()
@@ -105,7 +103,7 @@ namespace BlobIO.Gameplay.Blobs
             {
                 float angle = _blobSettings.GetRandomAngleOffset();
                 Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
-                Vector2 origin = (Vector2)transform.position + direction * BLOB_RADIUS;
+                Vector2 origin = (Vector2)transform.position + direction * _blobRadius;
 
                 if (Physics2D.RaycastNonAlloc(origin, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
                     _activeTentacles.Add(CreateTentacle(origin));

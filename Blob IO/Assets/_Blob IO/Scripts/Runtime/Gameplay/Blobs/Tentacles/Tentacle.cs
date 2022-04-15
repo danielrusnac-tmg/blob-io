@@ -23,9 +23,9 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
             _tipPoint = tipPoint;
             _stiffness = stiffness;
             _damp = damp;
-            _length = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
+            _length = Mathf.Max(Vector2.Distance(_basePoint.Position, _tipPoint.Position), Constants.MIN_TENTACLE_LENGTH);
 
-            _dynamicPointCount++;
+            _dynamicPointCount = 1;
             
             if (_basePoint.IsDynamic || _tipPoint.IsDynamic)
                 _dynamicPointCount++;
