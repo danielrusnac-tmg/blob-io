@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Blob Settings
   m_EditorClassIdentifier: 
   _updateTentaclesDelay: 0.1
-  _wantedTentacleCount: 7
+  _wantedTentacleCount: 8
   _desireThreshold: 0
   _removeDesireThreshold: -0.02
   _radius: 8
@@ -25,12 +25,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: -1
-      inSlope: 522.9359
-      outSlope: 522.9359
+      inSlope: 10.341346
+      outSlope: 10.341346
       tangentMode: 0
       weightedMode: 3
       inWeight: 0
-      outWeight: 0.003795065
+      outWeight: 0.09538053
     - serializedVersion: 3
       time: 0.5
       value: 0
@@ -43,11 +43,11 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 530.9696
-      outSlope: 530.9696
+      inSlope: 10.685383
+      outSlope: 10.685383
       tangentMode: 0
       weightedMode: 3
-      inWeight: 0.003795743
+      inWeight: 0.0939368
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
