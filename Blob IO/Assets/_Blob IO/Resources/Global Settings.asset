@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d098d3d5850048478fca2767b6874f0c, type: 3}
   m_Name: Global Settings
   m_EditorClassIdentifier: 
+  _playerType: 0
   _wallMask:
     serializedVersion: 2
     m_Bits: 320

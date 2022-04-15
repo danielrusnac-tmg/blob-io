@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BlobIO.Gameplay;
 using BlobIO.Gameplay.Blobs;
 using BlobIO.Gameplay.Cameras;
@@ -6,6 +7,7 @@ using BlobIO.Gameplay.Controllers;
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Input;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BlobIO.Services.Factory
 {
@@ -29,15 +31,24 @@ namespace BlobIO.Services.Factory
 
         public async void CreatePlayer(Vector3 position)
         {
-            Task<GameObject> playerPrefab = _assetProvider.Load(AssetPaths.PLAYER);
-            Task<GlobalSettings> globalSettings = _assetProvider.Load<GlobalSettings>(AssetPaths.GLOBAL_SETTINGS);
-            Task<BlobSettings> blobSettings = _assetProvider.Load<BlobSettings>(AssetPaths.PLAYER_BLOB_SETTINGS);
-
-            await Task.WhenAll(playerPrefab, globalSettings, blobSettings);
+            GlobalSettings globalSettings = await _assetProvider.Load<GlobalSettings>(AssetPaths.GLOBAL_SETTINGS);
+            BlobSettings blobSettings = await _assetProvider.Load<BlobSettings>(AssetPaths.PLAYER_BLOB_SETTINGS);
+            GameObject playerPrefab = null;
             
-            _player = Object.Instantiate(playerPrefab.Result, position, Quaternion.identity);
+            switch (globalSettings.PlayerType)
+            {
+                case PlayerType.WithParts:
+                    playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER_WITH_PARTS);
+                    break;
+                
+                default:
+                    playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER);
+                    break;
+            }
+           
+            _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
+            _player.GetComponent<Blob>().Construct(globalSettings, blobSettings);
             _player.GetComponent<IControllable>().SetInput(new PlayerInput(_inputService));
-            _player.GetComponent<Blob>().Construct(globalSettings.Result, blobSettings.Result);
 
             CreateCamera(_player.transform);
         }
