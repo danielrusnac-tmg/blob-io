@@ -5,11 +5,12 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 {
     public class Tentacle : MonoBehaviour
     {
+        private int _dynamicPointCount;
         private float _length;
         private float _stiffness;
         private float _damp;
         private float _compression;
-        private int _dynamicPointCount;
+        private float _verticalOffset;
         private Vector2 _lastOffset;
         private Vector2 _velocity;
         private TentaclePoint _basePoint;
@@ -17,8 +18,9 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 
         public Vector2 TipPoint => _tipPoint.Position;
 
-        public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp)
+        public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp, float verticalOffset)
         {
+            _verticalOffset = verticalOffset;
             _basePoint = basePoint;
             _tipPoint = tipPoint;
             _stiffness = stiffness;
@@ -37,7 +39,7 @@ namespace BlobIO.Gameplay.Blobs.Tentacles
 
         private void FixedUpdate()
         {
-            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position) / _dynamicPointCount;
+            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) / _dynamicPointCount;
             _basePoint.AddForce(force);
             _tipPoint.AddForce(-force);
         }

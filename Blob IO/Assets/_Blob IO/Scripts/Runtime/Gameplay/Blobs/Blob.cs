@@ -10,7 +10,7 @@ namespace BlobIO.Gameplay.Blobs
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable
     {
-        private const int MAX_TRY_POINT = 3;
+        private const int MAX_TRY_POINT = 10;
 
         [SerializeField] private float _blobRadius = 0.5f;
         [SerializeField] private Tentacle _tentaclePrefab;
@@ -93,12 +93,6 @@ namespace BlobIO.Gameplay.Blobs
 
         private void UpdateTentacleCount()
         {
-            if (_activeTentacles.Count < _blobSettings.WantedTentacleCount)
-                TryAnnNewTentacle();
-        }
-
-        private void TryAnnNewTentacle()
-        {
             for (int i = 0; i < MAX_TRY_POINT; i++)
             {
                 float angle = _blobSettings.GetRandomAngleOffset();
@@ -106,8 +100,31 @@ namespace BlobIO.Gameplay.Blobs
                 Vector2 origin = (Vector2)transform.position + direction * _blobRadius;
 
                 if (Physics2D.RaycastNonAlloc(origin, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
-                    _activeTentacles.Add(CreateTentacle(origin));
+                {
+                    if (_activeTentacles.Count < _blobSettings.WantedTentacleCount)
+                    {
+                        _activeTentacles.Add(CreateTentacle(origin));
+                    }
+                    else
+                    {
+                        float newPointDesirability = CalculateDesirability(_tentacleHits[0].point);
+                        float minDesirability = GetMinTentacleDesirability(out Tentacle unwantedTentacle);
+
+                        if (minDesirability < newPointDesirability)
+                        {
+                            RemoveTentacle(unwantedTentacle);
+                            _activeTentacles.Add(CreateTentacle(origin));
+                            break;   
+                        }
+                    }
+                }
             }
+        }
+
+        private void RemoveTentacle(Tentacle unwantedTentacle)
+        {
+            _activeTentacles.Remove(unwantedTentacle);
+            Destroy(unwantedTentacle.gameObject);
         }
 
         private Tentacle CreateTentacle(Vector2 origin)
@@ -116,15 +133,25 @@ namespace BlobIO.Gameplay.Blobs
             TentaclePoint basePoint = new TentaclePoint(gameObject, origin);
             TentaclePoint topPoint = new TentaclePoint(_tentacleHits[0].collider.gameObject, _tentacleHits[0].point);
 
-            tentacle.Construct(basePoint, topPoint, _blobSettings.Stiffness, _blobSettings.Damp);
+            tentacle.Construct(basePoint, topPoint, _blobSettings.Stiffness, _blobSettings.Damp, _blobRadius * 2);
             return tentacle;
         }
 
         private void RemoveUnwantedTentacle()
         {
-            float minDesirability = float.MaxValue;
-            Tentacle unwantedTentacle = null;
+            float minDesirability = GetMinTentacleDesirability(out Tentacle unwantedTentacle);
             
+            if (unwantedTentacle == null || minDesirability > _blobSettings.RemoveDesireThreshold)
+                return;
+
+            RemoveTentacle(unwantedTentacle);
+        }
+
+        private float GetMinTentacleDesirability(out Tentacle unwantedTentacle)
+        {
+            float minDesirability = float.MaxValue;
+            unwantedTentacle = null;
+
             foreach (Tentacle tentacle in _activeTentacles)
             {
                 float desirability = CalculateDesirability(tentacle.TipPoint);
@@ -135,12 +162,8 @@ namespace BlobIO.Gameplay.Blobs
                     unwantedTentacle = tentacle;
                 }
             }
-            
-            if (unwantedTentacle == null || minDesirability > _blobSettings.RemoveDesireThreshold)
-                return;
 
-            _activeTentacles.Remove(unwantedTentacle);
-            Destroy(unwantedTentacle.gameObject);
+            return minDesirability;
         }
 
         private float CalculateDesirability(Vector2 point)
