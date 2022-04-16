@@ -43,12 +43,12 @@ namespace BlobIO.Levels.Grids
             CellChanged?.Invoke(coordinate);
         }
 
-        public T GetValue(Vector2 worldPosition)
+        public T GetCell(Vector2 worldPosition)
         {
-            return GetValue(GetCoordinate(worldPosition));
+            return GetCell(GetCoordinate(worldPosition));
         }
 
-        public T GetValue(Vector2Int coordinate)
+        public T GetCell(Vector2Int coordinate)
         {
             return _gridCells[coordinate.x, coordinate.y];
         }
