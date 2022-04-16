@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace BlobIO.Grids
+namespace BlobIO.Levels.Grids
 {
     public class Grid<T>
     {

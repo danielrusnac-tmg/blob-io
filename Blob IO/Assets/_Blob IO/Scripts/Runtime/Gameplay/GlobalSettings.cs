@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Gameplay
+namespace BlobIO
 {
     [CreateAssetMenu(fileName = "New Global Settings", menuName = CreationPaths.CREATE + "Global Settings")]
     public class GlobalSettings : ScriptableObject

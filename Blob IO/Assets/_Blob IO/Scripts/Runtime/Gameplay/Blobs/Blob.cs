@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using BlobIO.Gameplay.Blobs.Tentacles;
-using BlobIO.Gameplay.Controllers;
+using BlobIO.Blobs.Tentacles;
+using BlobIO.Controllers;
 using UnityEditor;
 using UnityEngine;
 
-namespace BlobIO.Gameplay.Blobs
+namespace BlobIO.Blobs
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Blob : MonoBehaviour, IControllable

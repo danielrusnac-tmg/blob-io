@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BlobIO.Gameplay;
-using BlobIO.Gameplay.Blobs;
-using BlobIO.Gameplay.Cameras;
-using BlobIO.Gameplay.Controllers;
+using BlobIO.Blobs;
+using BlobIO.Cameras;
+using BlobIO.Controllers;
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Input;
 using UnityEngine;

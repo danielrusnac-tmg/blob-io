@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Gameplay.Blobs
+namespace BlobIO.Blobs
 {
     [CreateAssetMenu(fileName = "New Blob Settings", menuName = CreationPaths.BLOBS + "Blob Settings")]
     public class BlobSettings : ScriptableObject

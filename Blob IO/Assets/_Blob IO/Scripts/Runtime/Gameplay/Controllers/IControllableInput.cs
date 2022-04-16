@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Gameplay.Controllers
+namespace BlobIO.Controllers
 {
     public interface IControllableInput
     {

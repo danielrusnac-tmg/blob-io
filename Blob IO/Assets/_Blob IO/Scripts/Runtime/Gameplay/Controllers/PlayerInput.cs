@@ -1,7 +1,7 @@
 ﻿using BlobIO.Services.Input;
 using UnityEngine;
 
-namespace BlobIO.Gameplay.Controllers
+namespace BlobIO.Controllers
 {
     public class PlayerInput : IControllableInput
     {

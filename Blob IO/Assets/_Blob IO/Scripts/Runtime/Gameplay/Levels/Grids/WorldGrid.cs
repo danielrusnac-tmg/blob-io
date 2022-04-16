@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Grids
+namespace BlobIO.Levels.Grids
 {
     public class WorldGrid : MonoBehaviour
     {
@@ -23,13 +23,14 @@ namespace BlobIO.Grids
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = new Color(1f, 1f, 1f, 0.17f);
+
             for (int x = 0; x < _grid.Width + 1; x++)
             {
                 Gizmos.DrawLine(
                     _grid.GetWorldPosition(new Vector2Int(x, 0)),
                     _grid.GetWorldPosition(new Vector2Int(x, _grid.Height)));
             }
-            
+
             for (int y = 0; y < _grid.Height + 1; y++)
             {
                 Gizmos.DrawLine(

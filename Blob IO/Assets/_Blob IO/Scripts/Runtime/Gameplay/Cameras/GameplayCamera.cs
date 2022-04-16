@@ -1,7 +1,7 @@
 ﻿using Cinemachine;
 using UnityEngine;
 
-namespace BlobIO.Gameplay.Cameras
+namespace BlobIO.Cameras
 {
     public class GameplayCamera : MonoBehaviour
     {

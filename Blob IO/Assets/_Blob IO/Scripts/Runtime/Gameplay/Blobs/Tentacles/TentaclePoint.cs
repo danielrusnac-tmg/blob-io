@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BlobIO.Gameplay.Blobs.Tentacles
+namespace BlobIO.Blobs.Tentacles
 {
     public class TentaclePoint
     {
