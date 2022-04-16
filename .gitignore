@@ -64,7 +64,6 @@ Assets/UnityVS/*
 sysinfo.txt
 
 # Builds
-*.apk
 *.dwlt
 
 # Crashlytics generated file
