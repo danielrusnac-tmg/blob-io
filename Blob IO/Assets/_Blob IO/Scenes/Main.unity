@@ -8062,6 +8062,92 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6972711617392128159, guid: 9369421d1b4b47748b02d848a1dceb9e, type: 3}
   m_PrefabInstance: {fileID: 1432079208}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1439454452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1439454453}
+  - component: {fileID: 1439454454}
+  m_Layer: 0
+  m_Name: A*
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1439454453
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439454452}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1439454454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439454452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  data:
+    dataString: UEsDBBQAAAgIAAAQIewWXhdnnAIAAKIFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VNtuGjEQ/RXk56ZaEkKSvrVASCslQaFVHkoejD3LWnjtlS8BEvHvnfEu7Ia2EtKaM2cuZ2bsd6aMr0AE66ZOyXsrgX3pMTqzT73WeAdbvrJmrt7gwHlWMhRE4onzxIOyiPfJzdsSglPiq1lpImcIRqNy68qJXMHI+uARzrn2gCZnA3kbhN57bIufsxty2eHp/IpOb3i6yXp7PAowAVxLPRAPtJoVjdC8rEBSyS358rJhD2qaQTENI/tMNmG1Vr6phYVdlbTOqwIckFipOEpL+WuHAtSqCFRo1/sxzz2EpirHd2PlsEd1WPbN1o0ruV/Xpb1yHSnRcJCqqmPe/2U+6ydz7mx5d0jbzyhFKJRYP/Gd4D50GtuFx23l/dSgDddrvtTwXIB5sFNno5FoDC6Sa/RwPm7/HpWNChDrFq9LPQFj9f/xkIZ9Er8daVUuUyMHNTDXNvU7DR8czuY7FpxWwzchEKUqfnn4yVfdHWoMt8r5gKZGpaHyljY6orJJ6hmpiWFknYEEN0VXYLgOuxmGCacTPLF10p5YbjndliZ5YztcghOXBLf8LDsxzeymHZaHH7GsZlaZMAfuRNGJ5wu7uQdfPMaglYFWERkesIkja0y9ff4fbvPoci46bgG2IToY88DTJcCacEtk1xUbmjxM1JoWMqmg4L9RBf1eqMkFx7w6wezBmnR/PnxfaBFWUcmPa86u+XVfyvxC9i+zGzEQZ/2hgIvhMltmYngOF1cs3QNlsOdcz+qmNaPCDerOx+DSH1603tTxKt086fhmqt5K25m/MrmdCwdgHj+G8OAwCz4SciIV6pxDCMqk5WPvC6atWINcHAMtUmcn2+D4oo2yYJV6tYGQBRulJ2zBCD5erJmDVwUbSn7027P9H1BLAwQUAAAICAAAECHs1UCQeG0AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNdRUEovSizIKAaKGII4pZkpIHa0kkWihWFKSppxiqGpgWWySbKuoVlyqrFZkkGSQbKZUaqxuVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAECHsFl4XZ5wCAACiBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAECHs1UCQeG0AAAB4AAAACQAkAAAAAAAAAAAAAADpAgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAKEDAAAAAA==
+    upgradeData: 
+    file_cachedStartup: {fileID: 0}
+    data_cachedStartup: 
+    cacheStartup: 0
+  showNavGraphs: 1
+  showUnwalkableNodes: 1
+  debugMode: 0
+  debugFloor: 0
+  debugRoof: 1
+  manualDebugFloorRoof: 0
+  showSearchTree: 0
+  unwalkableNodeDebugSize: 0.3
+  logPathResults: 1
+  maxNearestNodeDistance: 100
+  scanOnStartup: 1
+  fullGetNearestSearch: 0
+  prioritizeGraphs: 0
+  prioritizeGraphsLimit: 1
+  colorSettings:
+    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
+    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
+    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
+    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
+    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
+    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
+    _AreaColors:
+    - {r: 0, g: 0, b: 0, a: 0}
+  tagNames: []
+  heuristic: 2
+  heuristicScale: 1
+  threadCount: 1
+  maxFrameTime: 10
+  batchGraphUpdates: 0
+  graphUpdateBatchingInterval: 0.2
+  euclideanEmbedding:
+    mode: 0
+    seed: 0
+    pivotPointRoot: {fileID: 0}
+    spreadOutCount: 1
+  showGraphs: 1
 --- !u!1001 &1444060390
 PrefabInstance:
   m_ObjectHideFlags: 0
