@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c174eefab13845f7b2631ba9edc4cc18, type: 3}
   m_Name: Player Blob Settings
   m_EditorClassIdentifier: 
-  _updateTentaclesDelay: 0.1
+  _updateTentaclesDelay: 0.08
   _wantedTentacleCount: 7
   _desireThreshold: 0
   _removeDesireThreshold: -0.02
