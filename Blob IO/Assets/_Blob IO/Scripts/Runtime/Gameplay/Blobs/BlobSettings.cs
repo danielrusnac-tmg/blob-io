@@ -7,6 +7,7 @@ namespace BlobIO.Blobs
     [Serializable]
     public class BlobSettings
     {
+        [SerializeField] private float _moveForce = 30f;
         [SerializeField] private float _blobRadius;
         [SerializeField] private float _forceVerticalOffset = 1.2f;
         [SerializeField] private AnimationCurve _angleBias = AnimationCurve.Constant(0f, 1f, 1f);
@@ -20,6 +21,7 @@ namespace BlobIO.Blobs
         [SerializeField] private float _stiffness = 100f;
         [SerializeField] private float _damp = 2f;
 
+        public float MoveForce => _moveForce;
         public float ForceVerticalOffset => _forceVerticalOffset;
         public float BlobRadius => _blobRadius;
         public float UpdateTentaclesDelay => _updateTentaclesDelay;

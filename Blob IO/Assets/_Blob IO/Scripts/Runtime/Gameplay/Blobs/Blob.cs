@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using BlobIO.Blobs.Tentacles;
 using BlobIO.Controllers;
@@ -20,6 +21,7 @@ namespace BlobIO.Blobs
 
         private bool _hasAController;
         private bool _isMoving;
+        private Rigidbody2D _rb;
         private Vector2 _moveDirection = Vector2.right;
         private IControllableInput _input;
         private List<Tentacle> _activeTentacles = new List<Tentacle>();
@@ -27,6 +29,11 @@ namespace BlobIO.Blobs
         static Blob()
         {
             s_tentacleHits = new RaycastHit2D[1];
+        }
+
+        private void Awake()
+        {
+            _rb = GetComponent<Rigidbody2D>();
         }
 
         private void Start()
@@ -39,6 +46,14 @@ namespace BlobIO.Blobs
         private void Update()
         {
             ReadInput();
+        }
+
+        private void FixedUpdate()
+        {
+            if (_isMoving)
+            {
+                _rb.AddForce(_moveDirection * _settings.MoveForce * _rb.mass);
+            }
         }
 
         private void OnDrawGizmos()

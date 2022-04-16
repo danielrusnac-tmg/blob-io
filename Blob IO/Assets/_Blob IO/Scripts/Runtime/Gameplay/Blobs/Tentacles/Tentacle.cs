@@ -6,7 +6,8 @@ namespace BlobIO.Blobs.Tentacles
     public class Tentacle : MonoBehaviour
     {
         private const float MIN_TENTACLE_LENGTH = 1f;
-        
+
+        [SerializeField] private float _resolution = 0.5f;
         [SerializeField] private LineRenderer _lineRenderer;
 
         private int _dynamicPointCount;
@@ -26,8 +27,8 @@ namespace BlobIO.Blobs.Tentacles
             float verticalOffset)
         {
             float radius = Mathf.Max(Vector2.Distance(basePoint.Position, tipPoint.Position), MIN_TENTACLE_LENGTH);
-            
-           Construct(basePoint, tipPoint, stiffness, damp, verticalOffset, radius);
+
+            Construct(basePoint, tipPoint, stiffness, damp, verticalOffset, radius);
         }
 
         public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
@@ -48,8 +49,28 @@ namespace BlobIO.Blobs.Tentacles
 
         private void Update()
         {
-            _lineRenderer.SetPosition(0, _basePoint.Position);
-            _lineRenderer.SetPosition(1, _tipPoint.Position);
+            float currentLength = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
+            int pointCount = (int) (currentLength / (1f / _resolution));
+
+            if (pointCount > 1)
+            {
+                Vector3 basePosition = _basePoint.Position;
+                Vector3 tipPosition = _tipPoint.Position;
+                Vector3[] points = new Vector3[pointCount];
+
+                for (int i = 0; i < pointCount; i++)
+                {
+                    float t = Mathf.Clamp01((float) i / (pointCount - 1));
+                    points[i] = Vector3.Lerp(basePosition, tipPosition, t);
+                }
+
+                _lineRenderer.positionCount = pointCount;
+                _lineRenderer.SetPositions(points);
+            }
+            else
+            {
+                _lineRenderer.positionCount = 0;
+            }
         }
 
         private void FixedUpdate()
