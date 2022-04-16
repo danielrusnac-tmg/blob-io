@@ -1,11 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BlobIO.Levels.Grids
 {
     public class Grid<T>
     {
-        public event Action<Vector2Int> CellChanged; 
         public readonly int Width;
         public readonly int Height;
 
@@ -40,15 +38,14 @@ namespace BlobIO.Levels.Grids
         public void SetValue(T value, Vector2Int coordinate)
         {
             _gridCells[coordinate.x, coordinate.y] = value;
-            CellChanged?.Invoke(coordinate);
         }
 
-        public T GetCell(Vector2 worldPosition)
+        public T GetValue(Vector2 worldPosition)
         {
-            return GetCell(GetCoordinate(worldPosition));
+            return GetValue(GetCoordinate(worldPosition));
         }
 
-        public T GetCell(Vector2Int coordinate)
+        public T GetValue(Vector2Int coordinate)
         {
             return _gridCells[coordinate.x, coordinate.y];
         }

@@ -5,6 +5,8 @@ namespace BlobIO.Blobs.Tentacles
 {
     public class Tentacle : MonoBehaviour
     {
+        private const float MIN_TENTACLE_LENGTH = 1f;
+        
         [SerializeField] private LineRenderer _lineRenderer;
 
         private int _dynamicPointCount;
@@ -23,13 +25,20 @@ namespace BlobIO.Blobs.Tentacles
         public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
             float verticalOffset)
         {
+            float radius = Mathf.Max(Vector2.Distance(basePoint.Position, tipPoint.Position), MIN_TENTACLE_LENGTH);
+            
+           Construct(basePoint, tipPoint, stiffness, damp, verticalOffset, radius);
+        }
+
+        public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
+            float verticalOffset, float radius)
+        {
             _verticalOffset = verticalOffset;
             _basePoint = basePoint;
             _tipPoint = tipPoint;
             _stiffness = stiffness;
             _damp = damp;
-            _length = Mathf.Max(Vector2.Distance(_basePoint.Position, _tipPoint.Position),
-                Constants.MIN_TENTACLE_LENGTH);
+            _length = radius;
 
             _dynamicPointCount = 1;
 

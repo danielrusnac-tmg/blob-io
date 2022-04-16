@@ -164,5 +164,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b58470ca6d464d08a50fff2e0e007280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _blobRadius: 0.4
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 320
   _tentaclePrefab: {fileID: 7399534123103511166, guid: c5cf220aabb787a48a8bc21a5a3bfaf9, type: 3}
+  _settings:
+    _blobRadius: 0.15
+    _forceVerticalOffset: 1.2
+    _angleBias:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -1
+        inSlope: 10.341346
+        outSlope: 10.341346
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0
+        outWeight: 0.09538053
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: 0.02570696
+        outSlope: 0.02570696
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 1
+        outWeight: 0.9999993
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 10.685383
+        outSlope: 10.685383
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.0939368
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    _updateTentaclesDelay: 0.08
+    _wantedTentacleCount: 7
+    _desireThreshold: 0
+    _removeDesireThreshold: -0.02
+    _radius: 8
+    _stiffness: 30
+    _damp: 1

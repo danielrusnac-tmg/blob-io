@@ -12,27 +12,25 @@ namespace BlobIO.Blobs
     {
         private const int MAX_TRY_POINT = 10;
 
-        [SerializeField] private float _blobRadius = 0.5f;
+        private static readonly RaycastHit2D[] s_tentacleHits;
+        
+        [SerializeField] private LayerMask _wallMask;
         [SerializeField] private Tentacle _tentaclePrefab;
+        [SerializeField] private BlobSettings _settings;
 
         private bool _hasAController;
         private bool _isMoving;
         private Vector2 _moveDirection = Vector2.right;
-        private static RaycastHit2D[] _tentacleHits;
-        private GlobalSettings _globalSettings;
-        private BlobSettings _blobSettings;
         private IControllableInput _input;
         private List<Tentacle> _activeTentacles = new List<Tentacle>();
 
         static Blob()
         {
-            _tentacleHits = new RaycastHit2D[1];
+            s_tentacleHits = new RaycastHit2D[1];
         }
 
-        public void Construct(GlobalSettings globalSettings, BlobSettings blobSettings)
+        private void Start()
         {
-            _globalSettings = globalSettings;
-            _blobSettings = blobSettings;
             _activeTentacles = new List<Tentacle>();
 
             StartCoroutine(UpdateTentaclesRoutine());
@@ -42,17 +40,17 @@ namespace BlobIO.Blobs
         {
             ReadInput();
         }
-        
+
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
-            float radius = _blobSettings ? _blobSettings.Radius : 8f;
-            
+            float radius = _settings.Radius;
+
             Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
             Handles.DrawLine(transform.position, transform.position + (Vector3) _moveDirection * radius);
-            
-           foreach (Tentacle tentacle in _activeTentacles)
-               tentacle.DrawGizmos();
+
+            foreach (Tentacle tentacle in _activeTentacles)
+                tentacle.DrawGizmos();
 #endif
         }
 
@@ -87,7 +85,7 @@ namespace BlobIO.Blobs
                     UpdateTentacleCount();
                 }
 
-                yield return new WaitForSeconds(_blobSettings.UpdateTentaclesDelay);
+                yield return new WaitForSeconds(_settings.UpdateTentaclesDelay);
             }
         }
 
@@ -95,26 +93,26 @@ namespace BlobIO.Blobs
         {
             for (int i = 0; i < MAX_TRY_POINT; i++)
             {
-                float angle = _blobSettings.GetRandomAngleOffset();
+                float angle = _settings.GetRandomAngleOffset();
                 Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
-                Vector2 origin = (Vector2)transform.position + direction * _blobRadius;
+                Vector2 origin = (Vector2) transform.position + direction * _settings.BlobRadius;
 
-                if (Physics2D.RaycastNonAlloc(origin, direction, _tentacleHits, _blobSettings.Radius, _globalSettings.WallMask) > 0)
+                if (Physics2D.RaycastNonAlloc(origin, direction, s_tentacleHits, _settings.Radius, _wallMask) > 0)
                 {
-                    if (_activeTentacles.Count < _blobSettings.WantedTentacleCount)
+                    if (_activeTentacles.Count < _settings.WantedTentacleCount)
                     {
                         _activeTentacles.Add(CreateTentacle(origin));
                     }
                     else
                     {
-                        float newPointDesirability = CalculateDesirability(_tentacleHits[0].point);
+                        float newPointDesirability = CalculateDesirability(s_tentacleHits[0].point);
                         float minDesirability = GetMinTentacleDesirability(out Tentacle unwantedTentacle);
 
-                        if (minDesirability < newPointDesirability)
+                        if (minDesirability - newPointDesirability < _settings.DesireThreshold)
                         {
                             RemoveTentacle(unwantedTentacle);
                             _activeTentacles.Add(CreateTentacle(origin));
-                            break;   
+                            break;
                         }
                     }
                 }
@@ -131,17 +129,17 @@ namespace BlobIO.Blobs
         {
             Tentacle tentacle = Instantiate(_tentaclePrefab, transform);
             TentaclePoint basePoint = new TentaclePoint(gameObject, origin);
-            TentaclePoint topPoint = new TentaclePoint(_tentacleHits[0].collider.gameObject, _tentacleHits[0].point);
+            TentaclePoint topPoint = new TentaclePoint(s_tentacleHits[0].collider.gameObject, s_tentacleHits[0].point);
 
-            tentacle.Construct(basePoint, topPoint, _blobSettings.Stiffness, _blobSettings.Damp, _blobRadius * 2);
+            tentacle.Construct(basePoint, topPoint, _settings.Stiffness, _settings.Damp, _settings.ForceVerticalOffset);
             return tentacle;
         }
 
         private void RemoveUnwantedTentacle()
         {
             float minDesirability = GetMinTentacleDesirability(out Tentacle unwantedTentacle);
-            
-            if (unwantedTentacle == null || minDesirability > _blobSettings.RemoveDesireThreshold)
+
+            if (unwantedTentacle == null || minDesirability > _settings.RemoveDesireThreshold)
                 return;
 
             RemoveTentacle(unwantedTentacle);
@@ -169,7 +167,7 @@ namespace BlobIO.Blobs
         private float CalculateDesirability(Vector2 point)
         {
             Vector2 offset = point - (Vector2) transform.position;
-            float distance = -offset.magnitude / _blobSettings.Radius;
+            float distance = -offset.magnitude / _settings.Radius;
             float angle = Vector2.Dot(offset.normalized, _moveDirection);
 
             return distance + angle;

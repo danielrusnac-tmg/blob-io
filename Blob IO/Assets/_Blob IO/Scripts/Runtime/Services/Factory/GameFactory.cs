@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using BlobIO.Blobs;
-using BlobIO.Cameras;
+﻿using BlobIO.Cameras;
 using BlobIO.Controllers;
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Input;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace BlobIO.Services.Factory
 {
@@ -22,23 +18,20 @@ namespace BlobIO.Services.Factory
             _assetProvider = assetProvider;
             _inputService = inputService;
         }
-
-        public void Warmup()
-        {
-            
-        }
-
+        
         public async void CreatePlayer(Vector3 position)
         {
-            GlobalSettings globalSettings = await _assetProvider.Load<GlobalSettings>(AssetPaths.GLOBAL_SETTINGS);
-            BlobSettings blobSettings = await _assetProvider.Load<BlobSettings>(AssetPaths.PLAYER_BLOB_SETTINGS);
             GameObject playerPrefab = await _assetProvider.Load(AssetPaths.PLAYER);
-           
             _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
-            _player.GetComponent<Blob>().Construct(globalSettings, blobSettings);
-            _player.GetComponent<IControllable>().SetInput(new PlayerInput(_inputService));
 
+            SetPlayerInput();
             CreateCamera(_player.transform);
+        }
+
+        private void SetPlayerInput()
+        {
+            if (_player.TryGetComponent(out IControllable controllable))
+                controllable.SetInput(new PlayerInput(_inputService));
         }
 
         public void Cleanup()

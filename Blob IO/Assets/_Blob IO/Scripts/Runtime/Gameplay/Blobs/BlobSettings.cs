@@ -1,10 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BlobIO.Blobs
 {
-    [CreateAssetMenu(fileName = "New Blob Settings", menuName = CreationPaths.BLOBS + "Blob Settings")]
-    public class BlobSettings : ScriptableObject
+    [Serializable]
+    public class BlobSettings
     {
+        [SerializeField] private float _blobRadius;
+        [SerializeField] private float _forceVerticalOffset = 1.2f;
+        [SerializeField] private AnimationCurve _angleBias = AnimationCurve.Constant(0f, 1f, 1f);
+
+        [Header("Tentacles")]
         [SerializeField] private float _updateTentaclesDelay = 0.2f;
         [SerializeField] private int _wantedTentacleCount = 7;
         [SerializeField] private float _desireThreshold;
@@ -12,8 +19,9 @@ namespace BlobIO.Blobs
         [SerializeField] private float _radius = 8f;
         [SerializeField] private float _stiffness = 100f;
         [SerializeField] private float _damp = 2f;
-        [SerializeField] private AnimationCurve _angleBias = AnimationCurve.Constant(0f, 1f, 1f);
 
+        public float ForceVerticalOffset => _forceVerticalOffset;
+        public float BlobRadius => _blobRadius;
         public float UpdateTentaclesDelay => _updateTentaclesDelay;
         public int WantedTentacleCount => _wantedTentacleCount;
         public float DesireThreshold => _desireThreshold;

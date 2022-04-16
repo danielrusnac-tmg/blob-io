@@ -20,7 +20,6 @@ namespace BlobIO.Infrastructure.States
         
         public void Enter()
         {
-            _gameFactory.Warmup();
             _gameFactory.CreatePlayer(Vector3.zero);
             _inputService.RestartButtonPressed += OnRestart;
         }
