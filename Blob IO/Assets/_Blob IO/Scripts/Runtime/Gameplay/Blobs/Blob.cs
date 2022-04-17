@@ -5,8 +5,8 @@ namespace BlobIO.Blobs
 {
     public class Blob : MonoBehaviour, IControllable
     {
-        [SerializeField] private int _currentTentacleCount;
-        [SerializeField] private int _maxTentacleCount = 10;
+        [Range(0f, 1f)]
+        [SerializeField] private float _t;
         [SerializeField] private float _speed = 10f;
         [SerializeField] private Rigidbody2D _blobRigidbody;
 
@@ -19,15 +19,16 @@ namespace BlobIO.Blobs
 
         private void FixedUpdate()
         {
-            float t = GetActiveTentaclesPercent();
-            Vector2 movement = (_input.IsMoving ? _input.MoveDirection : Vector2.zero) * _speed;
-            _blobRigidbody.AddForce((movement * t) - _blobRigidbody.velocity, ForceMode2D.Impulse);
-            _blobRigidbody.AddForce(Physics2D.gravity * (1f - t), ForceMode2D.Impulse);
+            Vector2 wantedVelocity = GetWantedVelocity();
+            _blobRigidbody.AddForce(wantedVelocity - _blobRigidbody.velocity, ForceMode2D.Impulse);
         }
 
-        private float GetActiveTentaclesPercent()
+        private Vector2 GetWantedVelocity()
         {
-            return (float)_currentTentacleCount / _maxTentacleCount;
+            Vector2 movement = (_input.IsMoving ? _input.MoveDirection : Vector2.zero) * _speed;
+            Vector2 gravity = Physics2D.gravity;
+            
+            return Vector2.Lerp(gravity, movement, _t);
         }
     }
 }
