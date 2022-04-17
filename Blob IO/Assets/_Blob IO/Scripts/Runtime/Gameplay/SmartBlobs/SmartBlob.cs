@@ -1,26 +1,23 @@
-﻿using BlobIO.Controllers;
+﻿using System;
+using BlobIO.Controllers;
 using UnityEngine;
 
 namespace BlobIO.SmartBlobs
 {
     public class SmartBlob : MonoBehaviour, IControllable
     {
-        [SerializeField] private Transform _tentacleContainer;
+        [SerializeField] private SmartTentacle[] _tentacles;
 
-        private Rigidbody2D _rb;
         private IControllableInput _input;
-
-        private void Awake()
-        {
-            _rb = GetComponent<Rigidbody2D>();
-        }
 
         private void Update()
         {
-            if (_input == null)
+            if (_input == null || _input.MoveDirection.sqrMagnitude < Constants.EPSILON)
                 return;
-            
-            _tentacleContainer.up = _input.MoveDirection;
+
+            float angle = Vector2.SignedAngle(Vector2.up, _input.MoveDirection);
+            foreach (SmartTentacle tentacle in _tentacles)
+                tentacle.GrabAngle = angle;
         }
 
         public void SetInput(IControllableInput input)

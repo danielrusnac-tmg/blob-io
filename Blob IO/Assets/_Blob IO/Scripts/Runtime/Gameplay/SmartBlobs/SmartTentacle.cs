@@ -1,4 +1,5 @@
-﻿using BlobIO.Blobs.Tentacles;
+﻿using System.Linq;
+using BlobIO.Blobs.Tentacles;
 using Pathfinding;
 using UnityEditor;
 using UnityEngine;
@@ -10,17 +11,15 @@ namespace BlobIO.SmartBlobs
         private static readonly Collider2D[] s_grabColliders;
         private static readonly RaycastHit2D[] s_rayHits;
 
-        [SerializeField] private float _stiffness = 50f;
-        [SerializeField] private float _damp = 0.6f;
-        [SerializeField] private GameObject _blob;
-        [SerializeField] private Tentacle _tentaclePrefab;
         [SerializeField] private SmartTentacleSetting _setting;
         [SerializeField] private Seeker _seeker;
 
         private Vector2 _idealGrabPosition;
         private GrabPoint _currentGrabPoint;
         private Transform _tentacleBase;
-        private Tentacle _tentacle;
+
+        public float GrabAngle { get; set; }
+        private Vector2 GrabDirection => Quaternion.AngleAxis(GrabAngle, Vector3.forward) * _tentacleBase.up;
 
         static SmartTentacle()
         {
@@ -47,6 +46,13 @@ namespace BlobIO.SmartBlobs
         private void OnDrawGizmosSelected()
         {
 #if UNITY_EDITOR
+            // Handles.DrawSolidDisc(transform.position, Vector3.forward, 0.1f);
+            //
+            // if (_setting == null)
+            //     return;
+            //
+            // Handles.DrawLine(transform.position, transform.position + transform.up * _setting.Radius);
+            
             if (!Application.isPlaying)
                 return;
 
@@ -59,48 +65,64 @@ namespace BlobIO.SmartBlobs
 #endif
         }
 
-        [ContextMenu(nameof(UpdateGrabPosition))]
         private void UpdateGrabPosition()
         {
             _idealGrabPosition = GetIdealGrabPosition();
             _currentGrabPoint = CreateGrabPoint(_currentGrabPoint.Position);
-            GrabPoint randomGrabPoint = GetRandomGrabPoint();
-
-            if (randomGrabPoint.Score > _currentGrabPoint.Score && Vector2.Distance(randomGrabPoint.Position, _currentGrabPoint.Position) > _setting.StepDistance)
-            {
-                _currentGrabPoint = randomGrabPoint;
-
-                if (_tentacle != null)
-                    Destroy(_tentacle.gameObject);
-
-                _tentacle = CreateTentacle(_tentacleBase.position, s_grabColliders[0].gameObject, randomGrabPoint.Position);
-                // _seeker.StartPath(_tentacleBase.position, _currentGrabPoint.Position, OnPathCalculated);
-            }
+            _seeker.StartPath(_tentacleBase.position, _idealGrabPosition, OnPathCalculated);
         }
 
         private void OnPathCalculated(Path path)
         {
-            
+            GrabPoint randomGrabPoint = GetRandomGrabPoint(path);
+
+            if (randomGrabPoint.Score > _currentGrabPoint.Score && Vector2.Distance(randomGrabPoint.Position, _currentGrabPoint.Position) > _setting.StepDistance)
+            {
+                _currentGrabPoint = randomGrabPoint;
+            }
         }
 
         private Vector2 GetIdealGrabPosition()
         {
-            return _tentacleBase.position + _tentacleBase.up * _setting.Radius;
+            return (Vector2)_tentacleBase.position + GrabDirection * _setting.Radius;
         }
 
-        private GrabPoint GetRandomGrabPoint()
+        private GrabPoint GetRandomGrabPoint(Path path)
         {
-            Vector2 randomPosition = (Vector2) _tentacleBase.position + Random.insideUnitCircle * _setting.Radius;
+            int outerMostPointInRadius = GetOuterMostPointInRadius(path);
 
+            Vector2 randomPosition = path.vectorPath[outerMostPointInRadius];
+            
             if (Physics2D.OverlapCircleNonAlloc(randomPosition, _setting.GrabRayRadius, s_grabColliders, _setting.GrabMask) == 0)
                 return CreateInvalidGrabPoint(randomPosition);
             
-            if (Physics2D.OverlapPointNonAlloc(randomPosition, s_grabColliders, _setting.GrabMask) > 0)
-                return CreateInvalidGrabPoint(randomPosition);
-
+            // if (Physics2D.OverlapPointNonAlloc(randomPosition, s_grabColliders, _setting.GrabMask) > 0)
+            //     return CreateInvalidGrabPoint(randomPosition);
+            //
             randomPosition = s_grabColliders[0].ClosestPoint(randomPosition);
             
             return CreateGrabPoint(randomPosition);
+        }
+
+        private int GetOuterMostPointInRadius(Path path)
+        {
+            float distance = 0f;
+            int outerMostPointInRadius = 0;
+
+            for (var i = 1; i < path.vectorPath.Count; i++)
+            {
+                float segmentDistance = Vector2.Distance(path.vectorPath[i - 1], path.vectorPath[i]);
+
+                if (distance + segmentDistance > _setting.Radius)
+                {
+                    outerMostPointInRadius = i - 1;
+                    break;
+                }
+
+                distance += segmentDistance;
+            }
+
+            return outerMostPointInRadius;
         }
 
         private GrabPoint CreateInvalidGrabPoint(Vector2 position = default)
@@ -115,16 +137,6 @@ namespace BlobIO.SmartBlobs
                 Position = position,
                 Score = -(_idealGrabPosition - position).sqrMagnitude
             };
-        }
-        
-        private Tentacle CreateTentacle(Vector2 origin, GameObject target, Vector2 targetPoint)
-        {
-            Tentacle tentacle = Instantiate(_tentaclePrefab, transform);
-            TentaclePoint basePoint = new TentaclePoint(_blob, origin);
-            TentaclePoint topPoint = new TentaclePoint(target, targetPoint);
-
-            tentacle.Construct(basePoint, topPoint, _stiffness, _damp, 0f);
-            return tentacle;
         }
     }
 }

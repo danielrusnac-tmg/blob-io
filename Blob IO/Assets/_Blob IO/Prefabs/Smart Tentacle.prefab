@@ -73,9 +73,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71100f1955df41bbb5282c6e79dbb39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stiffness: 50
-  _damp: 0.6
-  _blob: {fileID: 0}
+  _stiffness: 5
+  _damp: 0.4
+  _blob: {fileID: 1982563866727832278}
   _tentaclePrefab: {fileID: 7399534123103511166, guid: c5cf220aabb787a48a8bc21a5a3bfaf9, type: 3}
   _setting: {fileID: 11400000, guid: 511577e67ce190242913c2819d82ed7d, type: 2}
   _seeker: {fileID: 1982563866727832283}
