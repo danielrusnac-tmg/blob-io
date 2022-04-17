@@ -2013,92 +2013,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6972711617392128159, guid: 9369421d1b4b47748b02d848a1dceb9e, type: 3}
   m_PrefabInstance: {fileID: 403882936}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &411949547
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 411949549}
-  - component: {fileID: 411949548}
-  m_Layer: 0
-  m_Name: A*
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &411949548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 411949547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  data:
-    dataString: UEsDBBQAAAgIAAAQIewYSFsPngIAAKEFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VG1v2jAQ/ivIn9cqFMrUfdsCpZvUFpVN/TD64YgvxMKxI78UaMV/39lJSMo2CSnmuedenvOd35lQtsLMaTM3gt9rjuzLgIUz+zTojHe4h41WS/GGLedZcFcEEkTOEzihCR8GN6tLdEZkX9VGBnJCoFci16ac8Q2m2jpLcA7SIpmMdsFbEfQ+YHv6XNwElwOdrj6H0xudbpLBkY4ZKoemo7bEllazvMoklBXyUHJHnrTscU1TJKZhJJfXIbqWUtimFuYOVdSaQmU9KSECF0DaYgHJ5YiAAsWmcKHSvvtjnlt0TVkGDlNhqEl1XPZN150rwW7r2l5B+pBpMo5l1THv/zJfDKM5N7q8a9MOk5DCFSLbPsEhA+t6ne3D067yYezQDuQW1hKfC1QPem60V5yMzvjg6i1eTbu/J2Vpgdm2w+tSz0Bf/f9+goZjFL9PpSjXsZHjGlhKHRsebx8NXc53KjjOhm1CEBqq+GXxJ2z6Q9QYboWxjkyNShXKW2tvApXNYs+CGu9SbRRGuCm6QgXSHRYUxp3f4Jmtl/bMcgthXZrkja3dgjOXCHf8JDkzLfSuuyyLP3xZLbRQbolgsqIXzxZ6d4+2ePROCoWdomB4oCamWql6+uw/3Jbe5JD13BzunTc4BQdxC6gmmhLed6WGRg/lpQwDGVWE4L9JRfi9hCYXQHllhNmDVnF/PnxfwiBsvOAfx5xlsE4SGPFJkl/B9QQvbnAySnIcJyMc5hNKHfdAKOo5yEXdtOaqaIJUp0XRzLcv2mBuoIqLxw3s5uKt1L3rFyrXy8wgqsc6wkksGkpCjwSfcUEyl+icUHH22PuKSZ1tka9OgVaxsbO9M7DqoqxYJV61C8iKpfEJW7EAn/ZqYfBV4C4kb4Md2fEPUEsDBBQAAAgIAAAQIewJeEI7bQAAAHgAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM011FQSi9KLMgoBooYgjilmSkgdrRScmKSgUGicYqZQZpRoqlZqq5lqpmxQVqqiYFxqmGaWXKqUixQfUllQapfYm4qRE9AYklGWmZeSmZeup57UWaKO8hopdhaAFBLAQItABQAAAgIAAAQIewYSFsPngIAAKEFAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAAAQIewJeEI7bQAAAHgAAAAJACQAAAAAAAAAAAAAAOsCAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAowMAAAAA
-    upgradeData: 
-    file_cachedStartup: {fileID: 0}
-    data_cachedStartup: 
-    cacheStartup: 0
-  showNavGraphs: 1
-  showUnwalkableNodes: 1
-  debugMode: 0
-  debugFloor: 0
-  debugRoof: 1
-  manualDebugFloorRoof: 0
-  showSearchTree: 0
-  unwalkableNodeDebugSize: 0.3
-  logPathResults: 4
-  maxNearestNodeDistance: 100
-  scanOnStartup: 1
-  fullGetNearestSearch: 0
-  prioritizeGraphs: 0
-  prioritizeGraphsLimit: 1
-  colorSettings:
-    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
-    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
-    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
-    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
-    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
-    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
-    _AreaColors:
-    - {r: 0, g: 0, b: 0, a: 0}
-  tagNames: []
-  heuristic: 2
-  heuristicScale: 1
-  threadCount: 1
-  maxFrameTime: 10
-  batchGraphUpdates: 0
-  graphUpdateBatchingInterval: 0.2
-  euclideanEmbedding:
-    mode: 0
-    seed: 0
-    pivotPointRoot: {fileID: 0}
-    spreadOutCount: 1
-  showGraphs: 1
---- !u!4 &411949549
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 411949547}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &437350770
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8235,7 +8149,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5899288336232331589, guid: f76bacdbf2d909d4fac487b1c1049d88, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5899288336232331589, guid: f76bacdbf2d909d4fac487b1c1049d88, type: 3}
       propertyPath: m_LocalPosition.x
