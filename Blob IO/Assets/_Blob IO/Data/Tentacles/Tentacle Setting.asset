@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _grabMask:
     serializedVersion: 2
-    m_Bits: 64
-  _radius: 8
-  _stepDistance: 4
+    m_Bits: 320
+  _radius: 5
+  _stepDistance: 2
+  _grabRayRadius: 0.5

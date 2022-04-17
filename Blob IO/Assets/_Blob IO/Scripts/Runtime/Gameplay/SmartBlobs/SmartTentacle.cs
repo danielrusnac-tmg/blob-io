@@ -1,4 +1,5 @@
-﻿using Pathfinding;
+﻿using BlobIO.Blobs.Tentacles;
+using Pathfinding;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,13 +10,17 @@ namespace BlobIO.SmartBlobs
         private static readonly Collider2D[] s_grabColliders;
         private static readonly RaycastHit2D[] s_rayHits;
 
+        [SerializeField] private float _stiffness = 50f;
+        [SerializeField] private float _damp = 0.6f;
+        [SerializeField] private GameObject _blob;
+        [SerializeField] private Tentacle _tentaclePrefab;
         [SerializeField] private SmartTentacleSetting _setting;
         [SerializeField] private Seeker _seeker;
-        [SerializeField] private Rigidbody2D _tip;
 
         private Vector2 _idealGrabPosition;
         private GrabPoint _currentGrabPoint;
         private Transform _tentacleBase;
+        private Tentacle _tentacle;
 
         static SmartTentacle()
         {
@@ -50,7 +55,7 @@ namespace BlobIO.SmartBlobs
 
             Handles.color = Color.blue;
             Handles.DrawSolidDisc(_currentGrabPoint.Position, Vector3.forward, 0.1f);
-            Handles.DrawLine(_tip.position, _currentGrabPoint.Position);
+            // Handles.DrawLine(_tip.position, _currentGrabPoint.Position);
 #endif
         }
 
@@ -64,7 +69,12 @@ namespace BlobIO.SmartBlobs
             if (randomGrabPoint.Score > _currentGrabPoint.Score && Vector2.Distance(randomGrabPoint.Position, _currentGrabPoint.Position) > _setting.StepDistance)
             {
                 _currentGrabPoint = randomGrabPoint;
-                _seeker.StartPath(_tentacleBase.position, _currentGrabPoint.Position, OnPathCalculated);
+
+                if (_tentacle != null)
+                    Destroy(_tentacle.gameObject);
+
+                _tentacle = CreateTentacle(_tentacleBase.position, s_grabColliders[0].gameObject, randomGrabPoint.Position);
+                // _seeker.StartPath(_tentacleBase.position, _currentGrabPoint.Position, OnPathCalculated);
             }
         }
 
@@ -105,6 +115,16 @@ namespace BlobIO.SmartBlobs
                 Position = position,
                 Score = -(_idealGrabPosition - position).sqrMagnitude
             };
+        }
+        
+        private Tentacle CreateTentacle(Vector2 origin, GameObject target, Vector2 targetPoint)
+        {
+            Tentacle tentacle = Instantiate(_tentaclePrefab, transform);
+            TentaclePoint basePoint = new TentaclePoint(_blob, origin);
+            TentaclePoint topPoint = new TentaclePoint(target, targetPoint);
+
+            tentacle.Construct(basePoint, topPoint, _stiffness, _damp, 0f);
+            return tentacle;
         }
     }
 }
