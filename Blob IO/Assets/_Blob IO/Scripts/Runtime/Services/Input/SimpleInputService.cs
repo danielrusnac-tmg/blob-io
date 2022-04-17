@@ -13,7 +13,6 @@ namespace BlobIO.Services.Input
         private Coroutine _tickCoroutine;
         private readonly ICoroutineRunner _coroutineRunner;
 
-        public bool IsJoystickPressed => SimpleInput.GetMouseButton(0);
         public Vector2 Axis => new Vector2(SimpleInput.GetAxisRaw(HORIZONTAL), SimpleInput.GetAxisRaw(VERTICAL));
         public event Action RestartButtonPressed;
 
