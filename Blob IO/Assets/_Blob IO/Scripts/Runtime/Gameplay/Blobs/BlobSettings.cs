@@ -4,8 +4,8 @@ using Random = UnityEngine.Random;
 
 namespace BlobIO.Blobs
 {
-    [Serializable]
-    public class BlobSettings
+    [CreateAssetMenu(fileName = "New Blob Setting", menuName = CreationPaths.CREATE + "Blob Settings")]
+    public class BlobSettings : ScriptableObject
     {
         [SerializeField] private float _moveForce = 30f;
         [SerializeField] private float _blobRadius;

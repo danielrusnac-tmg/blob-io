@@ -49,6 +49,19 @@ namespace BlobIO.Blobs.Tentacles
 
         private void Update()
         {
+            UpdateRenderer();
+        }
+
+        private void FixedUpdate()
+        {
+            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) /
+                            _dynamicPointCount;
+            _basePoint.AddForce(force);
+            _tipPoint.AddForce(-force);
+        }
+
+        private void UpdateRenderer()
+        {
             float currentLength = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
             int pointCount = (int) (currentLength / (1f / _resolution));
 
@@ -71,14 +84,6 @@ namespace BlobIO.Blobs.Tentacles
             {
                 _lineRenderer.positionCount = 0;
             }
-        }
-
-        private void FixedUpdate()
-        {
-            Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) /
-                            _dynamicPointCount;
-            _basePoint.AddForce(force);
-            _tipPoint.AddForce(-force);
         }
 
         private Vector2 CalculateForce(Vector2 staticPoint, Vector2 dynamicPoint)

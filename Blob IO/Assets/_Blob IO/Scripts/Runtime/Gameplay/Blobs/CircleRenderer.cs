@@ -22,19 +22,10 @@ namespace BlobIO.Blobs
             _triangles = new int[count * 3];
         }
 
-        public void UpdateMesh(Vector3[] points)
+        public void UpdateMesh(BlobPoint[] points)
         {
             CalculateMeshTriangulation(points);
-            CalculateNormals(points);
             UpdateMeshData();
-        }
-
-        private void CalculateNormals(Vector3[] points)
-        {
-            for (int i = 0; i < _count; i++)
-                _normals[i] = (points[i] - _center).normalized;
-            
-            _normals[_count] = -Vector3.forward;
         }
 
         private void UpdateMeshData()
@@ -45,19 +36,21 @@ namespace BlobIO.Blobs
             _mesh.RecalculateBounds();
         }
 
-        private void CalculateMeshTriangulation(Vector3[] points)
+        private void CalculateMeshTriangulation(BlobPoint[] points)
         {
             _center = Vector3.zero;
             
             for (int i = 0, triangle = 0; i < _count; i++, triangle += 3)
             {
-                _center += points[i];
-                _vertices[i] = points[i];
+                _center += points[i].Position;
+                _vertices[i] = points[i].Position;
+                _normals[i] = points[i].Normal;
                 CreateTriangle(triangle, i);
             }
 
             _center /= _count;
             _vertices[_count] = _center;
+            _normals[_count] = -Vector3.forward;
         }
 
         private void CreateTriangle(int triangle, int vertex)
