@@ -8281,10 +8281,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bootstrapper
       objectReference: {fileID: 0}
-    - target: {fileID: 5899288336232331591, guid: f76bacdbf2d909d4fac487b1c1049d88, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f76bacdbf2d909d4fac487b1c1049d88, type: 3}
 --- !u!1001 &1475574037
