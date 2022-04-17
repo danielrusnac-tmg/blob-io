@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d99064bc89e6403b8eb634439b043826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _t: 0
+  _currentTentacleCount: 0
+  _maxTentacleCount: 10
   _speed: 10
   _blobRigidbody: {fileID: 1742613696032542893}
 --- !u!50 &1742613696032542893
