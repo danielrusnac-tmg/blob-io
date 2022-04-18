@@ -10,11 +10,13 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private PersistentTentacleSetting _setting;
         [SerializeField] private float _stiffness = 30f;
         [SerializeField] private float _damp = 1f;
+        [SerializeField] private Tentacle _tentaclePrefab;
 
         private bool _isGrabbing;
         private TentaclePoint _basePoint;
         private TentaclePoint _grabPoint;
-        
+        private Tentacle _tentacle;
+
         private Vector2 GetTentacleDirection => transform.up;
         private Vector2 GetTentacleOrigin => transform.position;
         private Vector2 GetIdealTentacleTip => transform.position + transform.up * _setting.Radius;
@@ -75,11 +77,14 @@ namespace BlobIO.Blobs.Tentacles
             
             _grabPoint = new TentaclePoint(target, point);
             _isGrabbing = true;
+            _tentacle = Instantiate(_tentaclePrefab, transform);
+            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0f, _setting.Radius);
         }
 
         private void Release()
         {
             _isGrabbing = false;
+            Destroy(_tentacle.gameObject);
         }
         
         private bool ShouldGrab()
