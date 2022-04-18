@@ -48,7 +48,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _updateTentaclesDelay: 0.02
+  _updateTentaclesDelay: 0.1
   _wantedTentacleCount: 7
   _desireThreshold: 0
   _removeDesireThreshold: -0.02

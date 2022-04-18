@@ -65,12 +65,12 @@ Rigidbody2D:
   m_Mass: 3
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 154167cb54165aa4693fcb83c62a329f, type: 2}
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &6706143118009558001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,8 +84,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputSpeed: 10
-  _tentacleSpeed: 4
-  _gravitySpeed: 5
   _tentacleBrain: {fileID: 1144928379048253506}
   _rigidbody: {fileID: 6706143118009558000}
 --- !u!114 &1144928379048253506
@@ -100,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3deb39f558214532995ea54889390fd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tentacleCount: 12
-  _angleSpan: 320
+  _tentacleCount: 24
+  _angleSpan: 360
   _baseRadius: 0
   _tentaclePrefab: {fileID: 1980604891544336460, guid: 1b20bf45ec8dfd84abc55733224b9b67, type: 3}
   _tentacleSettings:

@@ -17,10 +17,10 @@ namespace BlobIO.Blobs.Tentacles
         private TentaclePoint _grabPoint;
         private Tentacle _tentacle;
 
-        private Vector2 GetTentacleDirection => transform.up;
         private Vector2 GetTentacleOrigin => transform.position;
         private Vector2 GetIdealTentacleTip => transform.position + transform.up * _setting.Radius;
 
+        public Vector2 GetTentacleDirection => transform.up;
         public bool IsGrabbing => _isGrabbing;
         public float Stretchiness => Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / _setting.Radius;
         public Vector2 TipPosition => _grabPoint.Position;
@@ -36,7 +36,7 @@ namespace BlobIO.Blobs.Tentacles
             _setting = setting;
         }
 
-        private void Update()
+        public void UpdateTentacle()
         {
             if (ShouldRelease())
             {
@@ -71,6 +71,14 @@ namespace BlobIO.Blobs.Tentacles
 #endif
         }
 
+        public void SetWeight(float weight)
+        {
+            if (_isGrabbing)
+            {
+                _tentacle.Weight = weight;
+            }
+        }
+
         private void Grab(Vector2 point, GameObject target)
         {
             if (_isGrabbing)
@@ -78,7 +86,7 @@ namespace BlobIO.Blobs.Tentacles
             
             _grabPoint = new TentaclePoint(target, point);
             _isGrabbing = true;
-            // AttachSpring();
+            AttachSpring();
         }
 
         private void AttachSpring()
@@ -90,7 +98,7 @@ namespace BlobIO.Blobs.Tentacles
         private void Release()
         {
             _isGrabbing = false;
-            // RemoveSpring();
+            RemoveSpring();
         }
 
         private void RemoveSpring()

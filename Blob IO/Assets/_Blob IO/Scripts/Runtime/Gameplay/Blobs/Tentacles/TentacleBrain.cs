@@ -13,6 +13,7 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private PersistentTentacle _tentaclePrefab;
         [SerializeField] private PersistentTentacleSetting[] _tentacleSettings;
 
+        private Vector2 _lookDirection;
         private Quaternion _lookRotation;
         private TentaclePoint _centerPoint;
         private List<PersistentTentacle> _tentacles = new List<PersistentTentacle>();
@@ -29,6 +30,7 @@ namespace BlobIO.Blobs.Tentacles
 
         public void Look(Vector2 direction)
         {
+            _lookDirection = direction;
             _lookRotation = Quaternion.LookRotation(direction, Vector3.forward);
         }
 
@@ -57,7 +59,7 @@ namespace BlobIO.Blobs.Tentacles
         {
             float angleStep = _angleSpan / _tentacleCount;
             Vector2 center = transform.position;
-            Quaternion startRotation = _lookRotation * Quaternion.AngleAxis(_angleSpan / 2, Vector3.forward);
+            Quaternion startRotation = Quaternion.AngleAxis(_angleSpan / 2, Vector3.forward);
 
             for (int i = 0; i < _tentacles.Count; i++)
             {
@@ -66,6 +68,23 @@ namespace BlobIO.Blobs.Tentacles
                 Vector2 position = center + direction * _baseRadius;
                 
                 _tentacles[i].transform.SetPositionAndRotation(position, rotation);
+                _tentacles[i].UpdateTentacle();
+            }
+        }
+
+        public void ResetWeights()
+        {
+            foreach (PersistentTentacle tentacle in _tentacles)
+            {
+                tentacle.SetWeight(1f);
+            }
+        }
+        
+        public void UpdateWeights()
+        {
+            foreach (PersistentTentacle tentacle in _tentacles)
+            {
+                tentacle.SetWeight(Vector2.Dot(tentacle.GetTentacleDirection, _lookDirection));
             }
         }
 

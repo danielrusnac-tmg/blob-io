@@ -21,6 +21,7 @@ namespace BlobIO.Blobs.Tentacles
         private TentaclePoint _basePoint;
         private TentaclePoint _tipPoint;
 
+        public float Weight { get; set; } = 1f;
         public Vector2 TipPoint => _tipPoint.Position;
 
         public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
@@ -55,7 +56,7 @@ namespace BlobIO.Blobs.Tentacles
         private void FixedUpdate()
         {
             Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) /
-                            _dynamicPointCount;
+                            _dynamicPointCount * Weight;
             _basePoint.AddForce(force);
             _tipPoint.AddForce(-force);
         }
