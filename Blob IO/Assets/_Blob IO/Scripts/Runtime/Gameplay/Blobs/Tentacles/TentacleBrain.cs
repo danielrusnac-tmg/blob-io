@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlobIO.Blobs.Tentacles
@@ -13,31 +12,52 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private float _baseRadius = 0.5f;
         [SerializeField] private PersistentTentacle _tentaclePrefab;
 
-        private Vector2 _lookDirection;
         private Quaternion _lookRotation;
+        private TentaclePoint _centerPoint;
         private List<PersistentTentacle> _tentacles = new List<PersistentTentacle>();
+
+        public float ActiveTentaclePercent { get; private set; }
+        public float AverageTentacleStretchiness { get; private set; }
+        public Vector2 MidPoint { get; private set; }
 
         private void Awake()
         {
+            _centerPoint = new TentaclePoint(gameObject, transform.position);
             Look(Vector2.up);
         }
 
         private void Update()
         {
-            RefreshTentacles();
+            RemoveExtraTentacles();
+            GenerateTentacles();
+            UpdateTentaclePositions();
+            CountGrabbingTentacles();
         }
 
         public void Look(Vector2 direction)
         {
-            _lookDirection = direction;
             _lookRotation = Quaternion.LookRotation(direction, Vector3.forward);
         }
 
-        private void RefreshTentacles()
+        private void CountGrabbingTentacles()
         {
-            RemoveExtraTentacles();
-            GenerateTentacles();
-            UpdateTentaclePositions();
+            ActiveTentaclePercent = 0f;
+            AverageTentacleStretchiness = 0f;
+            MidPoint = Vector2.zero;
+            
+            foreach (PersistentTentacle tentacle in _tentacles)
+            {
+                if (tentacle.IsGrabbing)
+                {
+                    ActiveTentaclePercent++;
+                    AverageTentacleStretchiness += tentacle.Stretchiness;
+                    MidPoint += tentacle.TipPosition;
+                }
+            }
+
+            ActiveTentaclePercent /= _tentacleCount;
+            AverageTentacleStretchiness /= _tentacleCount;
+            MidPoint /= _tentacleCount;
         }
 
         private void UpdateTentaclePositions()
@@ -60,7 +80,9 @@ namespace BlobIO.Blobs.Tentacles
         {
             while (_tentacles.Count < _tentacleCount)
             {
-                _tentacles.Add(Instantiate(_tentaclePrefab, transform));
+                PersistentTentacle tentacle = Instantiate(_tentaclePrefab, transform);
+                tentacle.Construct(_centerPoint);
+                _tentacles.Add(tentacle);
             }
         }
 

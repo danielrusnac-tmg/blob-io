@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace BlobIO.Blobs.Tentacles
@@ -7,8 +6,10 @@ namespace BlobIO.Blobs.Tentacles
     public class PersistentTentacle : MonoBehaviour
     {
         private static readonly RaycastHit2D[] s_tentacleHits;
-        
+
         [SerializeField] private PersistentTentacleSetting _setting;
+        [SerializeField] private float _stiffness = 30f;
+        [SerializeField] private float _damp = 1f;
 
         private bool _isGrabbing;
         private TentaclePoint _basePoint;
@@ -16,16 +17,20 @@ namespace BlobIO.Blobs.Tentacles
         
         private Vector2 GetTentacleDirection => transform.up;
         private Vector2 GetTentacleOrigin => transform.position;
-        private Vector2 GetTentacleTip => transform.position + transform.up * _setting.Radius;
+        private Vector2 GetIdealTentacleTip => transform.position + transform.up * _setting.Radius;
+
+        public bool IsGrabbing => _isGrabbing;
+        public float Stretchiness => Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / _setting.Radius;
+        public Vector2 TipPosition => _grabPoint.Position;
 
         static PersistentTentacle()
         {
             s_tentacleHits = new RaycastHit2D[1];
         }
 
-        private void Awake()
+        public void Construct(TentaclePoint basePoint)
         {
-            _basePoint = new TentaclePoint(gameObject, GetTentacleOrigin);
+            _basePoint = basePoint;
         }
 
         private void Update()
@@ -41,7 +46,7 @@ namespace BlobIO.Blobs.Tentacles
             }
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
             if (_setting == null)
@@ -49,14 +54,13 @@ namespace BlobIO.Blobs.Tentacles
 
             if (!_isGrabbing)
             {
-                Handles.DrawLine(GetTentacleOrigin, GetTentacleTip);
+                Handles.DrawLine(GetTentacleOrigin, GetIdealTentacleTip);
             }
             else 
             {
                 if (_grabPoint != null)
                 {
-                    float compression = Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / _setting.Radius;
-                    Handles.color = Color.Lerp(Color.green, Color.red, compression);
+                    Handles.color = Color.Lerp(Color.green, Color.red, Stretchiness);
                     Handles.DrawLine(GetTentacleOrigin, _grabPoint.Position);
                     Handles.DrawSolidDisc(_grabPoint.Position, Vector3.forward, 0.1f);
                 }
@@ -66,6 +70,9 @@ namespace BlobIO.Blobs.Tentacles
 
         private void Grab(Vector2 point, GameObject target)
         {
+            if (_isGrabbing)
+                Release();
+            
             _grabPoint = new TentaclePoint(target, point);
             _isGrabbing = true;
         }
