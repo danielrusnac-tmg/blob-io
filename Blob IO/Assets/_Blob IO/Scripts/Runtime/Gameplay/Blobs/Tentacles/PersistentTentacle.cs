@@ -149,7 +149,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private void RemoveSpring()
         {
-            Destroy(_tentacle.gameObject);
+            _tentacle.Despawn();
         }
     }
 }

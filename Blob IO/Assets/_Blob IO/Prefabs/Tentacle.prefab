@@ -44,8 +44,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635f30e5750e45a6b4f71087cc857f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolution: 4
+  _resolution: 30
   _lineRenderer: {fileID: 5713633763142965066}
+  _wobbleAmount: 0
+  _wobbleFrequency: 0
+  _renderPercent: 1
+  _grabEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _releaseEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -1.2543675
+      outSlope: -1.2543675
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.035749804
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _wobbleEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.08746146
+      outSlope: 0.08746146
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.20176044
+    - serializedVersion: 3
+      time: 0.49714327
+      value: 1
+      inSlope: 0.023653444
+      outSlope: 0.023653444
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.8024855
+      outWeight: 0.72410536
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0.007306843
+      outSlope: 0.007306843
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.20663232
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!120 &5713633763142965066
 LineRenderer:
   m_ObjectHideFlags: 0
