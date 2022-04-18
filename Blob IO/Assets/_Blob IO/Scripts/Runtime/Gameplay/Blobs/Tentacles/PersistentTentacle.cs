@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace BlobIO.Blobs.Tentacles
@@ -29,22 +30,14 @@ namespace BlobIO.Blobs.Tentacles
 
         private void Update()
         {
-            if (_isGrabbing)
+            if (ShouldRelease())
             {
-                Vector2 offset = _grabPoint.Position - GetTentacleOrigin;
-                
-                if (Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) > _setting.ReleaseDistance ||
-                    Physics2D.RaycastNonAlloc(GetTentacleOrigin, offset.normalized, s_tentacleHits, offset.magnitude - 0.1f,
-                        _setting.WallMask) > 0)
-                {
-                    Release();
-                }
+                Release();
             }
-            
-            if (Physics2D.RaycastNonAlloc(GetTentacleOrigin, GetTentacleDirection, s_tentacleHits, _setting.Radius, _setting.WallMask) > 0)
+
+            if (IsFacingWall() && ShouldGrab())
             {
-                if (!_isGrabbing || Vector2.Distance(s_tentacleHits[0].point, _grabPoint.Position) > _setting.StepDistance)
-                    Grab(s_tentacleHits[0].point, s_tentacleHits[0].collider.gameObject);
+                Grab(s_tentacleHits[0].point, s_tentacleHits[0].collider.gameObject);
             }
         }
 
@@ -80,6 +73,28 @@ namespace BlobIO.Blobs.Tentacles
         private void Release()
         {
             _isGrabbing = false;
+        }
+        
+        private bool ShouldGrab()
+        {
+            return !_isGrabbing || Vector2.Distance(s_tentacleHits[0].point, _grabPoint.Position) > _setting.StepDistance;
+        }
+
+        private bool IsFacingWall()
+        {
+            return Physics2D.RaycastNonAlloc(GetTentacleOrigin, GetTentacleDirection, s_tentacleHits, _setting.Radius, _setting.WallMask) > 0;
+        }
+
+        private bool ShouldRelease()
+        {
+            if (!_isGrabbing)
+                return false;
+            
+            Vector2 offset = _grabPoint.Position - GetTentacleOrigin;
+            
+            return Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) > _setting.ReleaseDistance ||
+                   Physics2D.RaycastNonAlloc(GetTentacleOrigin, offset.normalized, s_tentacleHits, offset.magnitude - 0.1f,
+                       _setting.WallMask) > 0;
         }
     }
 }
