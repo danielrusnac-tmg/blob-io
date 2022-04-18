@@ -18,6 +18,6 @@ MonoBehaviour:
   _solidMask:
     serializedVersion: 2
     m_Bits: 64
-  _radius: 5
-  _stepDistance: 3
-  _releaseDistance: 7
+  _radius: 7
+  _stepDistance: 4
+  _releaseDistance: 9

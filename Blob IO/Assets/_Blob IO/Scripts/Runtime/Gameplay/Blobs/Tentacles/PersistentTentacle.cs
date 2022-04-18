@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace BlobIO.Blobs.Tentacles
@@ -7,12 +8,14 @@ namespace BlobIO.Blobs.Tentacles
     {
         private static readonly RaycastHit2D[] s_tentacleHits;
 
+        [SerializeField] private float _releaseTime = 0.1f;
         [SerializeField] private PersistentTentacleSetting _setting;
         [SerializeField] private float _stiffness = 30f;
         [SerializeField] private float _damp = 1f;
         [SerializeField] private Tentacle _tentaclePrefab;
 
         private float _weight = 1f;
+        private float _lifeTime;
         private bool _isGrabbing;
         private TentaclePoint _basePoint;
         private TentaclePoint _grabPoint;
@@ -24,6 +27,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private Vector2 GetTentacleOrigin => transform.position;
         private Vector2 GetIdealTentacleTip => transform.position + transform.up * Radius;
+        private bool CanRelease => _lifeTime < _releaseTime;
 
         public Vector2 GetTentacleDirection => transform.up;
         public bool IsGrabbing => _isGrabbing;
@@ -44,6 +48,12 @@ namespace BlobIO.Blobs.Tentacles
         {
             _basePoint = basePoint;
             _setting = setting;
+            _lifeTime = _releaseTime + 1;
+        }
+
+        private void Update()
+        {
+            _lifeTime += Time.deltaTime;
         }
 
         public void UpdateTentacle()
@@ -125,7 +135,7 @@ namespace BlobIO.Blobs.Tentacles
 
         public bool ShouldRelease()
         {
-            if (!_isGrabbing)
+            if (!_isGrabbing || CanRelease)
                 return false;
             
             Vector2 offset = _grabPoint.Position - GetTentacleOrigin;
@@ -134,7 +144,7 @@ namespace BlobIO.Blobs.Tentacles
                    Physics2D.RaycastNonAlloc(GetTentacleOrigin, offset.normalized, s_tentacleHits, offset.magnitude - 0.1f,
                        _setting.SolidMask) > 0;
         }
-
+        
         public void Release()
         {
             _isGrabbing = false;
@@ -143,6 +153,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private void AttachSpring()
         {
+            _lifeTime = 0f;
             _tentacle = Instantiate(_tentaclePrefab, transform);
             _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0.5f);
         }

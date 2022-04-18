@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9e43db332e4c2aa82e902e72be3148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _releaseTime: 0.4
   _setting: {fileID: 11400000, guid: 887f88f5c6f0c364692a8ed57d4e9c81, type: 2}
   _stiffness: 50
   _damp: 1

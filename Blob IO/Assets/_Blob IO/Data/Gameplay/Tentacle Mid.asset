@@ -19,5 +19,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _radius: 4
-  _stepDistance: 2
+  _stepDistance: 3
   _releaseDistance: 6

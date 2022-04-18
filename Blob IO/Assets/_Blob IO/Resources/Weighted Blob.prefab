@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5017cf0375154a7bb122b4a93018a5eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tentacleCreationTime: 0
   _tentacleCount: 16
   _angleSpan: 360
   _baseRadius: 0.5

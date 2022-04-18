@@ -7,6 +7,7 @@ namespace BlobIO.Blobs
 {
     public class BlobWithWeights : MonoBehaviour, IControllable
     {
+        [SerializeField] private float _tentacleCreationTime = 0.3f;
         [Range(1, 36)]
         [SerializeField] private int _tentacleCount = 8;
         [Range(0f, 360f)]
@@ -19,6 +20,7 @@ namespace BlobIO.Blobs
         [SerializeField] private PersistentTentacle _tentaclePrefab;
         [SerializeField] private PersistentTentacleSetting[] _tentacleSettings;
 
+        private float _createTentacleCooldown;
         private List<PersistentTentacle> _tentacles = new List<PersistentTentacle>();
 
         private TentaclePoint _blobPoint;
@@ -48,6 +50,8 @@ namespace BlobIO.Blobs
 
             RemoveInvalidTentacles();
             UpdateWeights();
+
+            _createTentacleCooldown += Time.deltaTime;
         }
 
         private void FixedUpdate()
@@ -135,7 +139,7 @@ namespace BlobIO.Blobs
                 Vector2 position = center + direction * _baseRadius;
                 
                 _tentacles[i].transform.SetPositionAndRotation(position, rotation);
-                _tentacles[i].UpdateTentacle();
+                // _tentacles[i].UpdateTentacle();
             }
         }
 
@@ -144,16 +148,25 @@ namespace BlobIO.Blobs
             foreach (PersistentTentacle tentacle in _tentacles)
             {
                 if (tentacle.ShouldRelease())
+                {
                     tentacle.Release();
+                }
             }
         }
 
         private void GrabOntoWalls()
         {
+            if (_createTentacleCooldown < _tentacleCreationTime)
+                return;
+            
             foreach (PersistentTentacle tentacle in _tentacles)
             {
                 if (tentacle.IsFacingWall(out Vector2 point, out GameObject grabbedObject) && tentacle.ShouldGrab())
+                {
                     tentacle.Grab(point, grabbedObject);
+                    _createTentacleCooldown = 0f;
+                    break;
+                }
             }
         }
 
