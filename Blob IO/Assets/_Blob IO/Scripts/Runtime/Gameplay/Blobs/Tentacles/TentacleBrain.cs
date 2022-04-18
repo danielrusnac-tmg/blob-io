@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BlobIO.Blobs.Tentacles
@@ -12,11 +13,24 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private float _baseRadius = 0.5f;
         [SerializeField] private PersistentTentacle _tentaclePrefab;
 
+        private Vector2 _lookDirection;
+        private Quaternion _lookRotation;
         private List<PersistentTentacle> _tentacles = new List<PersistentTentacle>();
+
+        private void Awake()
+        {
+            Look(Vector2.up);
+        }
 
         private void Update()
         {
             RefreshTentacles();
+        }
+
+        public void Look(Vector2 direction)
+        {
+            _lookDirection = direction;
+            _lookRotation = Quaternion.LookRotation(direction, Vector3.forward);
         }
 
         private void RefreshTentacles()
@@ -29,15 +43,16 @@ namespace BlobIO.Blobs.Tentacles
         private void UpdateTentaclePositions()
         {
             float angleStep = _angleSpan / _tentacleCount;
-            Quaternion startRotation = Quaternion.AngleAxis(-_angleSpan / 2, Vector3.forward);
+            Vector2 center = transform.position;
+            Quaternion startRotation = _lookRotation * Quaternion.AngleAxis(_angleSpan / 2, Vector3.forward);
 
             for (int i = 0; i < _tentacles.Count; i++)
             {
-                Quaternion rotation = startRotation * Quaternion.AngleAxis(angleStep * (i + 0.5f), Vector3.forward);
+                Quaternion rotation = Quaternion.AngleAxis(angleStep * (i + 0.5f), Vector3.forward) * startRotation;
                 Vector2 direction = rotation * Vector3.up;
-                Vector2 position = direction * _baseRadius;
-                _tentacles[i].transform.localPosition = position;
-                _tentacles[i].transform.localRotation = rotation;
+                Vector2 position = center + direction * _baseRadius;
+                
+                _tentacles[i].transform.SetPositionAndRotation(position, rotation);
             }
         }
 

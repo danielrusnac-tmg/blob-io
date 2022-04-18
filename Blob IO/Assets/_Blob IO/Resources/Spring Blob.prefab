@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 7382108998438354075}
   - component: {fileID: -2714090399286461340}
   m_Layer: 7
-  m_Name: Player
+  m_Name: Spring Blob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

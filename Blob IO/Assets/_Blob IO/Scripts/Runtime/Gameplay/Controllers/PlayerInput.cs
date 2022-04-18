@@ -12,6 +12,7 @@ namespace BlobIO.Controllers
             _inputService = inputService;
         }
 
+        public bool IsMoving => _inputService.Axis.sqrMagnitude > Constants.EPSILON;
         public Vector2 MoveDirection => _inputService.Axis;
     }
 }
