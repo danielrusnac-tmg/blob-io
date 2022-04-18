@@ -24,14 +24,29 @@ namespace BlobIO.Blobs.Tentacles
             if (_input.IsMoving)
             {
                 _tentacleBrain.Look(_input.MoveDirection);
+                _tentacleBrain.GenerateTentacles();
             }
+            
+            _tentacleBrain.UpdateTentaclePositions();
+            _tentacleBrain.RemoveExtraTentacles();
+            _tentacleBrain.CountGrabbingTentacles();
         }
 
         private void FixedUpdate()
         {
-            _rigidbody.AddForce(GetInputForce(), ForceMode2D.Impulse);
-            _rigidbody.AddForce(GetGravityForce(), ForceMode2D.Impulse);
-            _rigidbody.AddForce(GetTentaclesForce(), ForceMode2D.Impulse);
+            Vector2 force = Vector2.zero;
+
+            force += GetInputForce() - _rigidbody.velocity;
+            force += GetGravityForce();
+            
+            _rigidbody.AddForce(force, ForceMode2D.Impulse);
+            
+            // if (_input.IsMoving)
+            // {
+                // _rigidbody.AddForce(GetInputForce(), ForceMode2D.Impulse);
+            // }
+            // _rigidbody.AddForce(GetGravityForce(), ForceMode2D.Impulse);
+            // _rigidbody.AddForce(GetTentaclesForce(), ForceMode2D.Impulse);
         }
 
         public void SetInput(IControllableInput input)
@@ -41,7 +56,7 @@ namespace BlobIO.Blobs.Tentacles
         
         private Vector2 GetInputForce()
         {
-            return (_input.IsMoving ? _input.MoveDirection : Vector2.zero) * _inputSpeed * _tentacleBrain.ActiveTentaclePercent - _rigidbody.velocity;
+            return (_input.IsMoving ? _input.MoveDirection : Vector2.zero) * _inputSpeed * _tentacleBrain.ActiveTentaclePercent;
         }
 
         private Vector2 GetGravityForce()
@@ -51,7 +66,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private Vector2 GetTentaclesForce()
         {
-            return (_tentacleBrain.MidPoint - _rigidbody.position).normalized * _tentacleSpeed * _tentacleBrain.AverageTentacleStretchiness * _tentacleBrain.ActiveTentaclePercent - _rigidbody.velocity;
+            return (_tentacleBrain.MidPoint - _rigidbody.position).normalized * _tentacleSpeed * _tentacleBrain.AverageTentacleStretchiness * _tentacleBrain.ActiveTentaclePercent;
         }
     }
 }

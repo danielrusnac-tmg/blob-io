@@ -30,9 +30,10 @@ namespace BlobIO.Blobs.Tentacles
             s_tentacleHits = new RaycastHit2D[1];
         }
 
-        public void Construct(TentaclePoint basePoint)
+        public void Construct(TentaclePoint basePoint, PersistentTentacleSetting setting)
         {
             _basePoint = basePoint;
+            _setting = setting;
         }
 
         private void Update()
@@ -77,6 +78,11 @@ namespace BlobIO.Blobs.Tentacles
             
             _grabPoint = new TentaclePoint(target, point);
             _isGrabbing = true;
+            // AttachSpring();
+        }
+
+        private void AttachSpring()
+        {
             _tentacle = Instantiate(_tentaclePrefab, transform);
             _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0f, _setting.Radius);
         }
@@ -84,9 +90,14 @@ namespace BlobIO.Blobs.Tentacles
         private void Release()
         {
             _isGrabbing = false;
+            // RemoveSpring();
+        }
+
+        private void RemoveSpring()
+        {
             Destroy(_tentacle.gameObject);
         }
-        
+
         private bool ShouldGrab()
         {
             return !_isGrabbing || Vector2.Distance(s_tentacleHits[0].point, _grabPoint.Position) > _setting.StepDistance;

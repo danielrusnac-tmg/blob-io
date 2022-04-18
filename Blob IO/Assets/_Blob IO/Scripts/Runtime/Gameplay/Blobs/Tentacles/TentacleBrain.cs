@@ -5,12 +5,13 @@ namespace BlobIO.Blobs.Tentacles
 {
     public class TentacleBrain : MonoBehaviour
     {
-        [Range(1, 16)]
+        [Range(1, 36)]
         [SerializeField] private int _tentacleCount = 8;
         [Range(0f, 360f)]
         [SerializeField] private float _angleSpan = 160f;
         [SerializeField] private float _baseRadius = 0.5f;
         [SerializeField] private PersistentTentacle _tentaclePrefab;
+        [SerializeField] private PersistentTentacleSetting[] _tentacleSettings;
 
         private Quaternion _lookRotation;
         private TentaclePoint _centerPoint;
@@ -26,20 +27,12 @@ namespace BlobIO.Blobs.Tentacles
             Look(Vector2.up);
         }
 
-        private void Update()
-        {
-            RemoveExtraTentacles();
-            GenerateTentacles();
-            UpdateTentaclePositions();
-            CountGrabbingTentacles();
-        }
-
         public void Look(Vector2 direction)
         {
             _lookRotation = Quaternion.LookRotation(direction, Vector3.forward);
         }
 
-        private void CountGrabbingTentacles()
+        public void CountGrabbingTentacles()
         {
             ActiveTentaclePercent = 0f;
             AverageTentacleStretchiness = 0f;
@@ -60,7 +53,7 @@ namespace BlobIO.Blobs.Tentacles
             MidPoint /= _tentacleCount;
         }
 
-        private void UpdateTentaclePositions()
+        public void UpdateTentaclePositions()
         {
             float angleStep = _angleSpan / _tentacleCount;
             Vector2 center = transform.position;
@@ -76,17 +69,17 @@ namespace BlobIO.Blobs.Tentacles
             }
         }
 
-        private void GenerateTentacles()
+        public void GenerateTentacles()
         {
             while (_tentacles.Count < _tentacleCount)
             {
                 PersistentTentacle tentacle = Instantiate(_tentaclePrefab, transform);
-                tentacle.Construct(_centerPoint);
+                tentacle.Construct(_centerPoint, _tentacleSettings[Random.Range(0, _tentacleSettings.Length)]);
                 _tentacles.Add(tentacle);
             }
         }
 
-        private void RemoveExtraTentacles()
+        public void RemoveExtraTentacles()
         {
             while (_tentacles.Count > _tentacleCount)
             {
