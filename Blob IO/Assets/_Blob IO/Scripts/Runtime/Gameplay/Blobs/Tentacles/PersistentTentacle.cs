@@ -144,7 +144,7 @@ namespace BlobIO.Blobs.Tentacles
         private void AttachSpring()
         {
             _tentacle = Instantiate(_tentaclePrefab, transform);
-            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0f, Radius / 2);
+            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0.5f);
         }
 
         private void RemoveSpring()

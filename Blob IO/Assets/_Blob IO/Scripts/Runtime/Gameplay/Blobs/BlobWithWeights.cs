@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using BlobIO.Blobs.Tentacles;
 using BlobIO.Controllers;
 using UnityEngine;
@@ -7,11 +7,19 @@ namespace BlobIO.Blobs
 {
     public class BlobWithWeights : MonoBehaviour, IControllable
     {
+        [Range(1, 36)]
+        [SerializeField] private int _tentacleCount = 8;
+        [Range(0f, 360f)]
+        [SerializeField] private float _angleSpan = 160f;
+        [SerializeField] private float _baseRadius = 0.5f;
         [SerializeField] private float _speed = 10f;
         [SerializeField] private AnimationCurve _inputDistribution;
         [SerializeField] private AnimationCurve _wightDistribution;
         [SerializeField] private Rigidbody2D _blobRigidbody;
-        [SerializeField] private PersistentTentacle[] _tentacles;
+        [SerializeField] private PersistentTentacle _tentaclePrefab;
+        [SerializeField] private PersistentTentacleSetting[] _tentacleSettings;
+
+        private List<PersistentTentacle> _tentacles = new List<PersistentTentacle>();
 
         private TentaclePoint _blobPoint;
         private IControllableInput _input;
@@ -28,24 +36,20 @@ namespace BlobIO.Blobs
 
         private void Update()
         {
-            CountGrabbingTentacles();
-            
-            foreach (PersistentTentacle tentacle in _tentacles)
-            {
-                if (tentacle.ShouldRelease())
-                {
-                    tentacle.Release();
-                }
+            GenerateTentacles();
+            RemoveExtraTentacles();
 
-                if (_input.IsMoving && tentacle.IsFacingWall(out Vector2 point, out GameObject grabbedObject) && tentacle.ShouldGrab())
-                {
-                    tentacle.Grab(point, grabbedObject);
-                }
-                
-                tentacle.SetWeight(GetTentacleWeight(tentacle));
+            if (_input.IsMoving)
+            {
+                UpdateTentaclePositions();
+                CountGrabbingTentacles();
+                GrabOntoWalls();
             }
+
+            RemoveInvalidTentacles();
+            UpdateWeights();
         }
-        
+
         private void FixedUpdate()
         {
             if (_input.IsMoving)
@@ -77,7 +81,7 @@ namespace BlobIO.Blobs
             
             return _wightDistribution.Evaluate((dot + 1) / 2);
         }
-        
+
         public void CountGrabbingTentacles()
         {
             ActiveTentaclePercent = 0f;
@@ -94,10 +98,69 @@ namespace BlobIO.Blobs
                 }
             }
 
-            ActiveTentaclePercent /= _tentacles.Length;
-            AverageTentacleStretchiness /= _tentacles.Length;
-            MidPoint /= _tentacles.Length;
+            ActiveTentaclePercent /= _tentacleCount;
+            AverageTentacleStretchiness /= _tentacleCount;
+            MidPoint /= _tentacleCount;
         }
 
+        public void GenerateTentacles()
+        {
+            while (_tentacles.Count < _tentacleCount)
+            {
+                PersistentTentacle tentacle = Instantiate(_tentaclePrefab, transform);
+                tentacle.Construct(_blobPoint, _tentacleSettings[Random.Range(0, _tentacleSettings.Length)]);
+                _tentacles.Add(tentacle);
+            }
+        }
+
+        public void RemoveExtraTentacles()
+        {
+            while (_tentacles.Count > _tentacleCount)
+            {
+                Destroy(_tentacles[0].gameObject);
+                _tentacles.RemoveAt(0);
+            }
+        }
+
+        public void UpdateTentaclePositions()
+        {
+            float angleStep = _angleSpan / _tentacleCount;
+            Vector2 center = transform.position;
+            Quaternion startRotation = Quaternion.AngleAxis(_angleSpan / 2, Vector3.forward);
+
+            for (int i = 0; i < _tentacles.Count; i++)
+            {
+                Quaternion rotation = Quaternion.AngleAxis(angleStep * (i + 0.5f), Vector3.forward) * startRotation;
+                Vector2 direction = rotation * Vector3.up;
+                Vector2 position = center + direction * _baseRadius;
+                
+                _tentacles[i].transform.SetPositionAndRotation(position, rotation);
+                _tentacles[i].UpdateTentacle();
+            }
+        }
+
+        private void RemoveInvalidTentacles()
+        {
+            foreach (PersistentTentacle tentacle in _tentacles)
+            {
+                if (tentacle.ShouldRelease())
+                    tentacle.Release();
+            }
+        }
+
+        private void GrabOntoWalls()
+        {
+            foreach (PersistentTentacle tentacle in _tentacles)
+            {
+                if (tentacle.IsFacingWall(out Vector2 point, out GameObject grabbedObject) && tentacle.ShouldGrab())
+                    tentacle.Grab(point, grabbedObject);
+            }
+        }
+
+        private void UpdateWeights()
+        {
+            foreach (PersistentTentacle tentacle in _tentacles)
+                tentacle.SetWeight(GetTentacleWeight(tentacle));
+        }
     }
 }

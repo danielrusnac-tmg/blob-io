@@ -45,5 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _setting: {fileID: 11400000, guid: 887f88f5c6f0c364692a8ed57d4e9c81, type: 2}
   _stiffness: 50
-  _damp: 1.3
+  _damp: 1
   _tentaclePrefab: {fileID: 7399534123103511166, guid: c5cf220aabb787a48a8bc21a5a3bfaf9, type: 3}

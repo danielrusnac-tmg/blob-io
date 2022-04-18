@@ -46,8 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resolution: 30
   _lineRenderer: {fileID: 5713633763142965066}
+  _grabDuration: 0.15
+  _releaseDuration: 0.15
   _wobbleAmount: 0
-  _wobbleFrequency: 0
+  _wobbleFrequency: -15
   _renderPercent: 1
   _grabEase:
     serializedVersion: 2
@@ -79,17 +81,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -1.2543675
-      outSlope: -1.2543675
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.035749804
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0

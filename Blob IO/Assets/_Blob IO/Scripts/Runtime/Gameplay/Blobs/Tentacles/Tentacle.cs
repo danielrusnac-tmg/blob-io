@@ -12,6 +12,8 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private LineRenderer _lineRenderer;
         
         [Header("Animation")]
+        [SerializeField] private float _grabDuration = 0.3f;
+        [SerializeField] private float _releaseDuration = 0.3f;
         [SerializeField] private float _wobbleAmount;
         [SerializeField] private float _wobbleFrequency;
         [Range(0f, 1f)]
@@ -22,6 +24,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private bool _canApplyForce;
         private int _dynamicPointCount;
+        private float _wobbleOffset;
         private float _length;
         private float _stiffness;
         private float _damp;
@@ -38,6 +41,7 @@ namespace BlobIO.Blobs.Tentacles
         public void Construct(TentaclePoint basePoint, TentaclePoint tipPoint, float stiffness, float damp,
             float verticalOffset)
         {
+            _wobbleOffset = Random.value;
             float radius = Mathf.Max(Vector2.Distance(basePoint.Position, tipPoint.Position), MIN_TENTACLE_LENGTH);
 
             Construct(basePoint, tipPoint, stiffness, damp, verticalOffset, radius);
@@ -58,7 +62,7 @@ namespace BlobIO.Blobs.Tentacles
             if (_basePoint.IsDynamic || _tipPoint.IsDynamic)
                 _dynamicPointCount++;
 
-            StartCoroutine(nameof(SpawnAnimationRoutine), 0.3f);
+            StartCoroutine(nameof(SpawnAnimationRoutine));
         }
 
         private void Update()
@@ -80,18 +84,18 @@ namespace BlobIO.Blobs.Tentacles
         public void Despawn()
         {
             StopCoroutine(nameof(SpawnAnimationRoutine));
-            StartCoroutine(nameof(DespawnAnimationRoutine), 0.15f);
+            StartCoroutine(nameof(DespawnAnimationRoutine));
         }
 
-        private IEnumerator SpawnAnimationRoutine(float duration)
+        private IEnumerator SpawnAnimationRoutine()
         {
             // _canApplyForce = false;
             float time = 0f;
 
-            while (time < duration)
+            while (time < _grabDuration)
             {
                 time += Time.deltaTime;
-                float t = time / duration;
+                float t = time / _grabDuration;
 
                 // _wobbleAmount = Mathf.Lerp(0.7f, 0f, _grabEase.Evaluate(t));
                 // _wobbleFrequency = Mathf.Lerp(-10f, 0f, _grabEase.Evaluate(t));
@@ -100,25 +104,25 @@ namespace BlobIO.Blobs.Tentacles
                 yield return null;
             }
 
-            _wobbleAmount = 0f;
-            _wobbleFrequency = 0f;
+            // _wobbleAmount = 0f;
+            // _wobbleFrequency = 0f;
             _renderPercent = 1f;
                 
             _canApplyForce = true;
         }
 
-        private IEnumerator DespawnAnimationRoutine(float duration)
+        private IEnumerator DespawnAnimationRoutine()
         {
             _canApplyForce = false;
             float time = 0f;
 
-            while (time < 0.3f)
+            while (time < _releaseDuration)
             {
                 time += Time.deltaTime;
-                float t = time / duration;
+                float t = time / _releaseDuration;
                 
-                _wobbleAmount = Mathf.Lerp(0f, 0.5f, _releaseEase.Evaluate(t));
-                _wobbleFrequency = Mathf.Lerp(0f, -10f, _releaseEase.Evaluate(t));
+                // _wobbleAmount = Mathf.Lerp(0f, 0.5f, _releaseEase.Evaluate(t));
+                // _wobbleFrequency = Mathf.Lerp(0f, -10f, _releaseEase.Evaluate(t));
                 _renderPercent = Mathf.Lerp(1f, 0f, _releaseEase.Evaluate(t));
                 
                 yield return null;
@@ -134,7 +138,7 @@ namespace BlobIO.Blobs.Tentacles
 
             if (_canApplyForce)
             {
-                
+                _wobbleAmount = Mathf.Lerp(0.4f, 0f, _compression);
             }
 
             if (pointCount > 1)
@@ -146,7 +150,7 @@ namespace BlobIO.Blobs.Tentacles
                 for (int i = 0; i < pointCount; i++)
                 {
                     float t = Mathf.Clamp01((float) i / (pointCount - 1)) * _renderPercent;
-                    float wobbleAmount = Mathf.Sin(_wobbleFrequency * Time.time + (t * Mathf.PI * 2)) * _wobbleAmount * _wobbleEase.Evaluate(t);
+                    float wobbleAmount = Mathf.Sin(_wobbleFrequency * Time.time + ((t + _wobbleOffset) * Mathf.PI * 2)) * _wobbleAmount * _wobbleEase.Evaluate(t);
                     Vector2 wobbleAxis = Vector3.Cross((tipPosition - basePosition).normalized, Vector3.forward);
 
                     points[i] = Vector3.Lerp(basePosition, tipPosition, t);
