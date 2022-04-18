@@ -12,22 +12,32 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private float _damp = 1f;
         [SerializeField] private Tentacle _tentaclePrefab;
 
+        private float _weight = 1f;
         private bool _isGrabbing;
         private TentaclePoint _basePoint;
         private TentaclePoint _grabPoint;
         private Tentacle _tentacle;
+        
+        public float Radius => _setting.Radius * _weight;
+        public float StepDistance => _setting.StepDistance * _weight;
+        public float ReleaseDistance => _setting.ReleaseDistance * _weight;
 
         private Vector2 GetTentacleOrigin => transform.position;
-        private Vector2 GetIdealTentacleTip => transform.position + transform.up * _setting.Radius;
+        private Vector2 GetIdealTentacleTip => transform.position + transform.up * Radius;
 
         public Vector2 GetTentacleDirection => transform.up;
         public bool IsGrabbing => _isGrabbing;
-        public float Stretchiness => Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / _setting.Radius;
+        public float Stretchiness => Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / Radius;
         public Vector2 TipPosition => _grabPoint.Position;
 
         static PersistentTentacle()
         {
             s_tentacleHits = new RaycastHit2D[1];
+        }
+
+        public void Construct(TentaclePoint basePoint)
+        {
+            Construct(basePoint, _setting);
         }
 
         public void Construct(TentaclePoint basePoint, PersistentTentacleSetting setting)
@@ -43,9 +53,9 @@ namespace BlobIO.Blobs.Tentacles
                 Release();
             }
 
-            if (IsFacingWall() && ShouldGrab())
+            if (IsFacingWall(out Vector2 point, out GameObject grabbedObject) && ShouldGrab())
             {
-                Grab(s_tentacleHits[0].point, s_tentacleHits[0].collider.gameObject);
+                Grab(point, grabbedObject);
             }
         }
 
@@ -73,13 +83,15 @@ namespace BlobIO.Blobs.Tentacles
 
         public void SetWeight(float weight)
         {
-            if (_isGrabbing)
-            {
-                _tentacle.Weight = weight;
-            }
+            _weight = weight;
+            
+            if (_tentacle == null)
+                return;
+            
+            _tentacle.Weight = weight;
         }
 
-        private void Grab(Vector2 point, GameObject target)
+        public void Grab(Vector2 point, GameObject target)
         {
             if (_isGrabbing)
                 Release();
@@ -88,44 +100,56 @@ namespace BlobIO.Blobs.Tentacles
             _isGrabbing = true;
             AttachSpring();
         }
-
-        private void AttachSpring()
+        
+        public bool ShouldGrab()
         {
-            _tentacle = Instantiate(_tentaclePrefab, transform);
-            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0f, _setting.Radius);
+            return !_isGrabbing || Vector2.Distance(s_tentacleHits[0].point, _grabPoint.Position) > StepDistance;
         }
 
-        private void Release()
+        public bool IsFacingWall(out Vector2 point, out GameObject grabbedObject)
         {
-            _isGrabbing = false;
-            RemoveSpring();
+            int collisionCount = Physics2D.RaycastNonAlloc(GetTentacleOrigin, GetTentacleDirection, s_tentacleHits, Radius, _setting.GrabMask);
+
+            if (collisionCount == 0)
+            {
+                point = GetTentacleOrigin;
+                grabbedObject = null;
+                return false;
+            }
+            
+            point = s_tentacleHits[0].point;
+            grabbedObject = s_tentacleHits[0].collider.gameObject;
+            
+            return true;
         }
 
-        private void RemoveSpring()
-        {
-            Destroy(_tentacle.gameObject);
-        }
-
-        private bool ShouldGrab()
-        {
-            return !_isGrabbing || Vector2.Distance(s_tentacleHits[0].point, _grabPoint.Position) > _setting.StepDistance;
-        }
-
-        private bool IsFacingWall()
-        {
-            return Physics2D.RaycastNonAlloc(GetTentacleOrigin, GetTentacleDirection, s_tentacleHits, _setting.Radius, _setting.WallMask) > 0;
-        }
-
-        private bool ShouldRelease()
+        public bool ShouldRelease()
         {
             if (!_isGrabbing)
                 return false;
             
             Vector2 offset = _grabPoint.Position - GetTentacleOrigin;
             
-            return Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) > _setting.ReleaseDistance ||
+            return Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) > ReleaseDistance ||
                    Physics2D.RaycastNonAlloc(GetTentacleOrigin, offset.normalized, s_tentacleHits, offset.magnitude - 0.1f,
-                       _setting.WallMask) > 0;
+                       _setting.SolidMask) > 0;
+        }
+
+        public void Release()
+        {
+            _isGrabbing = false;
+            RemoveSpring();
+        }
+
+        private void AttachSpring()
+        {
+            _tentacle = Instantiate(_tentaclePrefab, transform);
+            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0f, Radius / 2);
+        }
+
+        private void RemoveSpring()
+        {
+            Destroy(_tentacle.gameObject);
         }
     }
 }

@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e0817cab9b6498bb4bde9cc4e372d15, type: 3}
   m_Name: Tentacle Mid
   m_EditorClassIdentifier: 
-  _wallMask:
+  _grabMask:
     serializedVersion: 2
     m_Bits: 320
+  _solidMask:
+    serializedVersion: 2
+    m_Bits: 64
   _radius: 4
   _stepDistance: 2
   _releaseDistance: 6
