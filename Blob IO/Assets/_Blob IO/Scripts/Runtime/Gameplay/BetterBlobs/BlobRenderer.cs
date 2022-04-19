@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using BlobIO.Blobs;
+using UnityEngine;
 
-namespace BlobIO.Blobs
+namespace BlobIO.BetterBlobs
 {
-    public class CircleRenderer
+    public class BlobRenderer
     {
         private readonly int _count;
         private readonly Mesh _mesh;
@@ -11,7 +12,7 @@ namespace BlobIO.Blobs
         private readonly Vector3[] _normals;
         private readonly int[] _triangles;
 
-        public CircleRenderer(MeshFilter meshFilter, int count)
+        public BlobRenderer(MeshFilter meshFilter, int count)
         {
             _count = count;
             _mesh = new Mesh();

@@ -1,13 +1,16 @@
 ﻿using BlobIO.Controllers;
 using UnityEngine;
 
-namespace BlobIO.Blobs
+namespace BlobIO.BetterBlobs
 {
     public class BetterBlob : MonoBehaviour, IControllable
     {
-        [SerializeField] private int _tentacleCount = 10;
-
         private IControllableInput _input;
+
+        private void Update()
+        {
+            
+        }
 
         public void SetInput(IControllableInput input)
         {
