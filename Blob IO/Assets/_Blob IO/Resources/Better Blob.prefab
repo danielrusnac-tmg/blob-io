@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 235175341008599513}
   - component: {fileID: 235175341008599518}
   - component: {fileID: 5978801669233515098}
+  - component: {fileID: 3934718488118335677}
   m_Layer: 0
   m_Name: Better Blob
   m_TagString: Untagged
@@ -109,15 +110,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c89c5530b54a1383583295d97083b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 1
-  _resolution: 3
-  _surfaceSpring:
-    _frequency: 20
-    _damping: 0.8
-  _bodySpring:
-    _frequency: 4
-    _damping: 0.4
-  _pointPrefab: {fileID: 1478672575395652298, guid: bd75d4d2ca578204185de8359c3314db, type: 3}
+--- !u!114 &3934718488118335677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235175341008599519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be8bc27382414251a98d56ddce28f1ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _radius: 0.5
+  _resolution: 30
+  _meshFilter: {fileID: 235175341946994063}
+  _blobBody:
+    _gasConstant: 0
+    _stiffness: 0
+    _damp: 0
 --- !u!1 &235175341946994066
 GameObject:
   m_ObjectHideFlags: 0
