@@ -17,7 +17,8 @@ namespace BlobIO.Blobs
         [SerializeField] private int _wantedTentacleCount = 7;
         [SerializeField] private float _desireThreshold;
         [SerializeField] private float _removeDesireThreshold = -1f;
-        [SerializeField] private float _radius = 8f;
+        [SerializeField] private float _raycastRadius = 8f;
+        [SerializeField] private float _tentacleRadius = 4f;
         [SerializeField] private float _stiffness = 100f;
         [SerializeField] private float _damp = 2f;
 
@@ -28,7 +29,8 @@ namespace BlobIO.Blobs
         public int WantedTentacleCount => _wantedTentacleCount;
         public float DesireThreshold => _desireThreshold;
         public float RemoveDesireThreshold => _removeDesireThreshold;
-        public float Radius => _radius;
+        public float RaycastRadius => _raycastRadius;
+        public float TentacleRadius => _tentacleRadius;
         public float Stiffness => _stiffness;
         public float Damp => _damp;
 

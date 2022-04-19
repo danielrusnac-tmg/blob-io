@@ -52,6 +52,7 @@ MonoBehaviour:
   _wantedTentacleCount: 7
   _desireThreshold: 0
   _removeDesireThreshold: -0.02
-  _radius: 8
+  _raycastRadius: 8
+  _tentacleRadius: 4
   _stiffness: 30
-  _damp: 1
+  _damp: 3

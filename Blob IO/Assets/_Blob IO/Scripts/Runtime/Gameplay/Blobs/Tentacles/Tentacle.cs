@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace BlobIO.Blobs.Tentacles
 {
@@ -91,7 +89,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private IEnumerator SpawnAnimationRoutine()
         {
-            // _canApplyForce = false;
+            _canApplyForce = false;
             float time = 0f;
 
             while (time < _grabDuration)
@@ -137,11 +135,6 @@ namespace BlobIO.Blobs.Tentacles
         {
             float currentLength = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
             int pointCount = (int) (currentLength / (1f / _resolution));
-
-            if (_canApplyForce)
-            {
-                _wobbleAmount = Mathf.Lerp(0.4f, 0f, _compression);
-            }
 
             if (pointCount > 1)
             {

@@ -58,7 +58,7 @@ namespace BlobIO.Blobs
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
-            float radius = _settings.Radius;
+            float radius = _settings.RaycastRadius;
 
             Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
             Handles.DrawLine(transform.position, transform.position + (Vector3) _moveDirection * radius);
@@ -111,7 +111,7 @@ namespace BlobIO.Blobs
                 Vector2 direction = Quaternion.AngleAxis(angle, Vector3.forward) * _moveDirection;
                 Vector2 origin = (Vector2) transform.position + direction * _settings.BlobRadius;
 
-                if (Physics2D.RaycastNonAlloc(origin, direction, s_tentacleHits, _settings.Radius, _wallMask) > 0)
+                if (Physics2D.RaycastNonAlloc(origin, direction, s_tentacleHits, _settings.RaycastRadius, _wallMask) > 0)
                 {
                     if (_activeTentacles.Count < _settings.WantedTentacleCount)
                     {
@@ -145,7 +145,7 @@ namespace BlobIO.Blobs
             TentaclePoint basePoint = new TentaclePoint(gameObject, origin);
             TentaclePoint topPoint = new TentaclePoint(s_tentacleHits[0].collider.gameObject, s_tentacleHits[0].point);
 
-            tentacle.Construct(basePoint, topPoint, _settings.Stiffness, _settings.Damp, _settings.ForceVerticalOffset);
+            tentacle.Construct(basePoint, topPoint, _settings.Stiffness, _settings.Damp, _settings.ForceVerticalOffset, _settings.TentacleRadius);
             return tentacle;
         }
 
@@ -181,7 +181,7 @@ namespace BlobIO.Blobs
         private float CalculateDesirability(Vector2 point)
         {
             Vector2 offset = point - (Vector2) transform.position;
-            float distance = -offset.magnitude / _settings.Radius;
+            float distance = -offset.magnitude / _settings.RaycastRadius;
             float angle = Vector2.Dot(offset.normalized, _moveDirection);
 
             return distance + angle;
