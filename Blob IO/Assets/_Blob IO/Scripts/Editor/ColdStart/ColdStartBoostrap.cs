@@ -27,7 +27,9 @@ namespace BlobIOEditor.ColdStart
 
         private void Load()
         {
-            _lastOpenedScenesPaths = JsonUtility.FromJson<ColdStartData>(EditorPrefs.GetString(EditorSaveKeys.LAST_OPENED_SCENES)).LastOpenedScenesPaths;
+            _lastOpenedScenesPaths = EditorPrefs.HasKey(EditorSaveKeys.LAST_OPENED_SCENES) 
+                ? JsonUtility.FromJson<ColdStartData>(EditorPrefs.GetString(EditorSaveKeys.LAST_OPENED_SCENES)).LastOpenedScenesPaths 
+                : Array.Empty<string>();
         }
 
         private void Save()
@@ -62,6 +64,7 @@ namespace BlobIOEditor.ColdStart
 
         private void OpenBoot()
         {
+            Debug.Log("Cold Start.");
             _bootScene = EditorSceneManager.OpenScene(_booScenePath, OpenSceneMode.Single);
         }
 
