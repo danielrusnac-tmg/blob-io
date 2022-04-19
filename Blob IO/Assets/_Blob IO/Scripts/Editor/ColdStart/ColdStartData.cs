@@ -3,13 +3,14 @@
 namespace BlobIOEditor.ColdStart
 {
     [Serializable]
-    public struct ColdStartData
+    public class ColdStartData
     {
+        public bool WasColdStarted;
         public string[] LastOpenedScenesPaths;
 
-        public ColdStartData(string[] lastOpenedScenesPaths)
+        public ColdStartData()
         {
-            LastOpenedScenesPaths = lastOpenedScenesPaths;
+            LastOpenedScenesPaths = Array.Empty<string>();
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public static class EditorSaveKeys
     {
-        public const string LAST_OPENED_SCENES = "last_opened_scenes";
+        public const string COLD_START_DATA = "cold_start_data";
     }
 }

@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 namespace BlobIOEditor.ColdStart
 {
-    public class ColdStartBoostrap 
+    public class ColdStartBoostrap
     {
+        private ColdStartData _data;
         private readonly string _booScenePath;
         private Scene _bootScene;
-        private string[] _lastOpenedScenesPaths;
 
         public ColdStartBoostrap(string booScenePath)
         {
@@ -27,20 +27,24 @@ namespace BlobIOEditor.ColdStart
 
         private void Load()
         {
-            _lastOpenedScenesPaths = EditorPrefs.HasKey(EditorSaveKeys.LAST_OPENED_SCENES) 
-                ? JsonUtility.FromJson<ColdStartData>(EditorPrefs.GetString(EditorSaveKeys.LAST_OPENED_SCENES)).LastOpenedScenesPaths 
-                : Array.Empty<string>();
+            _data = EditorPrefs.HasKey(EditorSaveKeys.COLD_START_DATA) 
+                ? JsonUtility.FromJson<ColdStartData>(EditorPrefs.GetString(EditorSaveKeys.COLD_START_DATA)) 
+                : new ColdStartData();
         }
 
         private void Save()
         {
-            EditorPrefs.SetString(EditorSaveKeys.LAST_OPENED_SCENES, JsonUtility.ToJson(new ColdStartData(_lastOpenedScenesPaths)));
+            EditorPrefs.SetString(EditorSaveKeys.COLD_START_DATA, JsonUtility.ToJson(_data));
         }
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             switch (state)
             {
+                case PlayModeStateChange.EnteredPlayMode:
+                    LogColdStart();
+                    break;
+                    
                 case PlayModeStateChange.EnteredEditMode:
                     OpenLastOpenedScenes();
                     CloseBoot();
@@ -48,13 +52,24 @@ namespace BlobIOEditor.ColdStart
                 
                 case PlayModeStateChange.ExitingEditMode:
                     RememberOpenedScenes();
-                    
+
                     if (IsBootSceneLoaded())
+                    {
+                        _data.WasColdStarted = false;
                         return;
+                    }
                     
+                    _data.WasColdStarted = true;
                     OpenBoot();
+                    Save();
                     break;
             }
+        }
+
+        private void LogColdStart()
+        {
+            if (_data.WasColdStarted)
+                Debug.Log("Cold Start.");
         }
 
         private bool IsBootSceneLoaded()
@@ -64,36 +79,29 @@ namespace BlobIOEditor.ColdStart
 
         private void OpenBoot()
         {
-            Debug.Log("Cold Start.");
             _bootScene = EditorSceneManager.OpenScene(_booScenePath, OpenSceneMode.Single);
         }
 
         private void CloseBoot()
         {
             if (_bootScene.isLoaded)
-            {
                 EditorSceneManager.CloseScene(_bootScene, true);
-            }
         }
 
         private void RememberOpenedScenes()
         {
-            _lastOpenedScenesPaths = new string[EditorSceneManager.loadedSceneCount];
+            _data.LastOpenedScenesPaths = new string[EditorSceneManager.loadedSceneCount];
             
             for (int i = 0; i < EditorSceneManager.loadedSceneCount; i++)
-                _lastOpenedScenesPaths[i] = SceneManager.GetSceneAt(i).path;
-            
-            Save();
+                _data.LastOpenedScenesPaths[i] = SceneManager.GetSceneAt(i).path;
         }
 
         private void OpenLastOpenedScenes()
         {
-            foreach (string scenePath in _lastOpenedScenesPaths)
-            {
+            foreach (string scenePath in _data.LastOpenedScenesPaths)
                 EditorSceneManager.OpenScene(scenePath);
-            }
             
-            _lastOpenedScenesPaths = Array.Empty<string>();
+            _data.LastOpenedScenesPaths = Array.Empty<string>();
         }
     }
 }
