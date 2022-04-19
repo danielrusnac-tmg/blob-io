@@ -26,7 +26,6 @@ namespace BlobIO.BetterBlobs
             _circleRenderer.UpdateMesh(_blobBody.BlobPoints);
         }
 
-
         private int GetPointCount()
         {
             return (int)(2 * Mathf.PI * _radius / (1 / _resolution));
