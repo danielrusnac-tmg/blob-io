@@ -1,16 +1,17 @@
-﻿using BlobIO.Blobs;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BlobIO.BetterBlobs
 {
     public class BlobRenderer
     {
+        public readonly Vector3[] Vertices;
+        public readonly int[] Triangles;
+        
         private readonly int _count;
         private readonly Mesh _mesh;
         private Vector3 _center;
-        private readonly Vector3[] _vertices;
         private readonly Vector3[] _normals;
-        private readonly int[] _triangles;
+
 
         public BlobRenderer(MeshFilter meshFilter, int count)
         {
@@ -18,9 +19,9 @@ namespace BlobIO.BetterBlobs
             _mesh = new Mesh();
             meshFilter.mesh = _mesh;
             
-            _vertices = new Vector3[count + 1];
+            Vertices = new Vector3[count + 1];
             _normals = new Vector3[count + 1];
-            _triangles = new int[count * 3];
+            Triangles = new int[count * 3];
         }
 
         public void UpdateMesh(BlobPoint[] points)
@@ -31,8 +32,8 @@ namespace BlobIO.BetterBlobs
 
         private void UpdateMeshData()
         {
-            _mesh.SetVertices(_vertices);
-            _mesh.SetTriangles(_triangles, 0);
+            _mesh.SetVertices(Vertices);
+            _mesh.SetTriangles(Triangles, 0);
             _mesh.SetNormals(_normals);
             _mesh.RecalculateBounds();
         }
@@ -44,13 +45,13 @@ namespace BlobIO.BetterBlobs
             for (int i = 0, triangle = 0; i < _count; i++, triangle += 3)
             {
                 _center += points[i].Position;
-                _vertices[i] = points[i].Position;
+                Vertices[i] = points[i].Position;
                 _normals[i] = points[i].Normal;
                 CreateTriangle(triangle, i);
             }
 
             _center /= _count;
-            _vertices[_count] = _center;
+            Vertices[_count] = _center;
             _normals[_count] = -Vector3.forward;
         }
 
@@ -58,15 +59,15 @@ namespace BlobIO.BetterBlobs
         {
             if (vertex < _count - 1)
             {
-                _triangles[triangle + 0] = vertex + 1;
-                _triangles[triangle + 1] = vertex;
-                _triangles[triangle + 2] = _count;
+                Triangles[triangle + 0] = vertex + 1;
+                Triangles[triangle + 1] = vertex;
+                Triangles[triangle + 2] = _count;
             }
             else
             {
-                _triangles[triangle + 0] = 0;
-                _triangles[triangle + 1] = _count - 1;
-                _triangles[triangle + 2] = _count;
+                Triangles[triangle + 0] = 0;
+                Triangles[triangle + 1] = _count - 1;
+                Triangles[triangle + 2] = _count;
             }
         }
     }

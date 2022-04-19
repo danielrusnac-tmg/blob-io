@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _radius: 0.5
-  _resolution: 30
+  _resolution: 6
   _meshFilter: {fileID: 235175341946994063}
 --- !u!1 &235175341946994066
 GameObject:
