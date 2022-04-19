@@ -10,6 +10,8 @@ namespace BlobIO.BetterBlobs
         private Vector3 _velocity;
         private Vector3 _force;
 
+        public Vector3 Velocity => _velocity;
+
         public BlobPoint(Vector3 position, Vector3 normal)
         {
             Position = position;

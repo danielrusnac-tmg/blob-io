@@ -8,8 +8,11 @@ namespace BlobIO.BetterBlobs
     public class BlobBody
     {
         [SerializeField] private float _gasConstant = 50f;
-        [SerializeField] private float _pressure;
-
+        [SerializeField] private float _stiffness = 40f;
+        [SerializeField] private float _damp = 3f;
+        
+        private float _pressure;
+        private readonly float _pointDistance;
         private readonly BlobRenderer _blobRenderer;
         private BlobPoint[] _blobPoints;
 
@@ -17,6 +20,7 @@ namespace BlobIO.BetterBlobs
 
         public BlobBody(int pointCount, float radius, BlobRenderer blobRenderer)
         {
+            _pointDistance = 2 * Mathf.PI * radius / pointCount;
             _blobRenderer = blobRenderer;
             _blobPoints = CreatePoints(pointCount, radius, Vector3.zero);;
         }
@@ -35,7 +39,14 @@ namespace BlobIO.BetterBlobs
             {
                 _blobPoints[i].ResetForce();
                 _blobPoints[i].AddForce(_blobPoints[i].Normal * _pressure);
+                _blobPoints[i].AddForce(ComputeSpringForce(i, i + 1));
             }
+        }
+
+        private Vector3 ComputeSpringForce(int a, int b)
+        {
+            Vector3 velocityDelta = _blobPoints[a].Velocity - _blobPoints[b].Velocity;
+            return _stiffness * (velocityDelta.magnitude - _pointDistance) * velocityDelta / velocityDelta.magnitude;
         }
 
         private void MovePoints()
@@ -49,7 +60,7 @@ namespace BlobIO.BetterBlobs
 
         private float GetPressure()
         {
-            return Mathf.Pow(Mathf.Pow(GetArea(), 2), -1) * _gasConstant;
+            return _gasConstant / Mathf.Pow(GetArea(), 2); 
         }
 
         private float GetArea()
