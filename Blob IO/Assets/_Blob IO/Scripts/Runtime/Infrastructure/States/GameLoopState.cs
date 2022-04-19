@@ -37,7 +37,7 @@ namespace BlobIO.Infrastructure.States
 
         private void OnLevelLoaded()
         {
-            _gameFactory.CreatePlayer(Vector3.zero);
+            _gameFactory.CreatePlayer(Vector3.up * 2);
             _inputService.RestartButtonPressed += OnRestart;
         }
 

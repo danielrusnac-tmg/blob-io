@@ -69,7 +69,7 @@ namespace BlobIOEditor.ColdStart
         private void LogColdStart()
         {
             if (_data.WasColdStarted)
-                Debug.Log("Cold Start.");
+                Debug.Log("Cold Start");
         }
 
         private bool IsBootSceneLoaded()

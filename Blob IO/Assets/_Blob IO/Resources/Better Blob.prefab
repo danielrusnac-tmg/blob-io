@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 235175341008599515}
   - component: {fileID: 235175341008599513}
   - component: {fileID: 235175341008599518}
-  - component: {fileID: 235175341008599512}
+  - component: {fileID: 5978801669233515098}
   m_Layer: 0
   m_Name: Better Blob
   m_TagString: Untagged
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff63ca42245d4674b131a88b5c615145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &235175341008599512
+--- !u!114 &5978801669233515098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,12 +106,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 235175341008599519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39b68b4c2c274d4197072be33a22a14b, type: 3}
+  m_Script: {fileID: 11500000, guid: 32c89c5530b54a1383583295d97083b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 0.5
-  _resolution: 6
-  _meshFilter: {fileID: 235175341946994063}
+  _radius: 1
+  _resolution: 3
+  _surfaceSpring:
+    _frequency: 20
+    _damping: 0.8
+  _bodySpring:
+    _frequency: 4
+    _damping: 0.4
+  _pointPrefab: {fileID: 1478672575395652298, guid: bd75d4d2ca578204185de8359c3314db, type: 3}
 --- !u!1 &235175341946994066
 GameObject:
   m_ObjectHideFlags: 0
