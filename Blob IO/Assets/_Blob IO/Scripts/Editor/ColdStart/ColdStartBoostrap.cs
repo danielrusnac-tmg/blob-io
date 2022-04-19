@@ -1,23 +1,12 @@
 ﻿using System;
-using BlobIO.Constants;
+using BlobIOEditor.Constants;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BlobIO
+namespace BlobIOEditor.ColdStart
 {
-    [Serializable]
-    public struct ColdStartData
-    {
-        public string[] LastOpenedScenesPaths;
-
-        public ColdStartData(string[] lastOpenedScenesPaths)
-        {
-            LastOpenedScenesPaths = lastOpenedScenesPaths;
-        }
-    }
-    
     public class ColdStartBoostrap 
     {
         private readonly string _booScenePath;

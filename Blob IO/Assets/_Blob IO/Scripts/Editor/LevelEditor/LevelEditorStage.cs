@@ -1,7 +1,7 @@
 ﻿using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace BlobIO.LevelEditor
+namespace BlobIOEditor.LevelEditor
 {
     public class LevelEditorStage : PreviewSceneStage
     {

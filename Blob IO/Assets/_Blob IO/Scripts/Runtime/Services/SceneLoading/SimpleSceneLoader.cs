@@ -10,8 +10,10 @@ namespace BlobIO.Services.SceneLoading
         
         public void LoadLevel(int levelIndex, Action onLoaded)
         {
-            SceneManager.LoadScene(GetValidLevelIndex(levelIndex));
-            onLoaded?.Invoke();
+            SceneManager.LoadSceneAsync(GetValidLevelIndex(levelIndex)).completed += operation =>
+            {
+                onLoaded?.Invoke();
+            };
         }
 
         private int GetValidLevelIndex(int levelIndex)

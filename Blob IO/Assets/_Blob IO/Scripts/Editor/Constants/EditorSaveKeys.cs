@@ -1,4 +1,4 @@
-﻿namespace BlobIO.Constants
+﻿namespace BlobIOEditor.Constants
 {
     public static class EditorSaveKeys
     {

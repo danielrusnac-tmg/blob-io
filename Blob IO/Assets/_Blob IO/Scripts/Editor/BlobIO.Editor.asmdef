@@ -1,6 +1,6 @@
 {
     "name": "BlobIO.Editor",
-    "rootNamespace": "BlobIO",
+    "rootNamespace": "BlobIOEditor",
     "references": [
         "BlobIO"
     ],

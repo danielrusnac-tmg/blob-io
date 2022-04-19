@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace BlobIO
+namespace BlobIOEditor.ColdStart
 {
     public static class ColdStartBoostrapCreator
     {
