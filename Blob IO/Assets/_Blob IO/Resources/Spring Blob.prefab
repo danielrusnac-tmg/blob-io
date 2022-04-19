@@ -183,5 +183,5 @@ MonoBehaviour:
   _wallMask:
     serializedVersion: 2
     m_Bits: 320
-  _tentaclePrefab: {fileID: 7399534123103511166, guid: c5cf220aabb787a48a8bc21a5a3bfaf9, type: 3}
+  _tentaclePrefab: {fileID: 7399534123103511166, guid: a1ba22fa122af754f9fa2850952238a9, type: 3}
   _settings: {fileID: 11400000, guid: 75f1b1b8f8317434e9078c812bd9947f, type: 2}
