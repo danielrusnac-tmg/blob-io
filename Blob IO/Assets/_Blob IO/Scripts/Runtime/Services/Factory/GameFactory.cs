@@ -21,7 +21,7 @@ namespace BlobIO.Services.Factory
         
         public async void CreatePlayer(Vector3 position)
         {
-            GameObject playerPrefab = await _assetProvider.Load(AssetPaths.SPRING_BLOB);
+            GameObject playerPrefab = await _assetProvider.Load(AssetPaths.BETTER_BLOB);
             _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
 
             SetPlayerInput();
@@ -31,7 +31,12 @@ namespace BlobIO.Services.Factory
         private void SetPlayerInput()
         {
             if (_player.TryGetComponent(out IControllable controllable))
+            {
                 controllable.SetInput(new PlayerInput(_inputService));
+                return;
+            }
+            
+            Debug.Log("No Controllable component on player!", _player);
         }
 
         public void Cleanup()
