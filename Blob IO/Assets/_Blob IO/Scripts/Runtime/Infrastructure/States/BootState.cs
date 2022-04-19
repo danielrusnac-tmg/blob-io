@@ -2,6 +2,7 @@
 using BlobIO.Services.AssetManagement;
 using BlobIO.Services.Factory;
 using BlobIO.Services.Input;
+using BlobIO.Services.SceneLoading;
 
 namespace BlobIO.Infrastructure.States
 {
@@ -20,6 +21,7 @@ namespace BlobIO.Infrastructure.States
             services.RegisterSingle<ICoroutineRunner>(coroutineRunner);
             services.RegisterSingle<IInputService>(new SimpleInputService(coroutineRunner));
             services.RegisterSingle<IAssetProvider>(new ResourcesAssetProvider());
+            services.RegisterSingle<ISceneLoader>(new SimpleSceneLoader());
             RegisterGameFactory(services);
         }
 

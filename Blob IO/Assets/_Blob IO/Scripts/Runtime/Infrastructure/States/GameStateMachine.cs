@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BlobIO.Services;
 using BlobIO.Services.Factory;
 using BlobIO.Services.Input;
+using BlobIO.Services.SceneLoading;
 
 namespace BlobIO.Infrastructure.States
 {
@@ -16,7 +17,7 @@ namespace BlobIO.Infrastructure.States
             _stateByType = new Dictionary<Type, IGameState>
             {
                 {typeof(BootState), new BootState(this, services, coroutineRunner)},
-                {typeof(GameLoopState), new GameLoopState(this, services.Single<IGameFactory>(), services.Single<IInputService>())}
+                {typeof(GameLoopState), new GameLoopState(this, services.Single<IGameFactory>(), services.Single<IInputService>(), services.Single<ISceneLoader>())}
             };
         }
 
