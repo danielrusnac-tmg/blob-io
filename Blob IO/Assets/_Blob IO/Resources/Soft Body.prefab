@@ -127,11 +127,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _radius: 0.5
-  _resolution: 10
-  _pressure: 4
+  _resolution: 8
+  _pressure: 200
   _surfaceSpring:
-    _frequency: 30
-    _damping: 0.2
+    _stiffness: 600
+    _damping: 16
   _pointPrefab: {fileID: 3477207265575636684, guid: c40a3fb3188d4094ab3b4e548640340b, type: 3}
   _softBodyRenderer: {fileID: 6055717585151562615}
 --- !u!114 &6055717585151562615

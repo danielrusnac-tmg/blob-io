@@ -25,9 +25,9 @@ namespace BlobIO.SoftBody
             _triangles = new int[_count * 3];
         }
 
-        public void UpdateMesh(SoftBodyPoint[] points)
+        public void UpdateMesh(SoftBodyPoint[] points, SoftBodySpring[] springs)
         {
-            CalculateMeshTriangulation(points);
+            CalculateMeshTriangulation(points, springs);
             
             _mesh.SetVertices(_vertices);
             _mesh.SetTriangles(_triangles, 0);
@@ -35,14 +35,14 @@ namespace BlobIO.SoftBody
             _mesh.RecalculateBounds();
         }
         
-        private void CalculateMeshTriangulation(SoftBodyPoint[] points)
+        private void CalculateMeshTriangulation(SoftBodyPoint[] points, SoftBodySpring[] springs)
         {
             _center = Vector3.zero;
             
             for (int i = 0, triangle = 0; i < _count; i++, triangle += 3)
             {
                 Vector3 position = _meshFilter.transform.InverseTransformPoint(points[i].Position);
-                Vector3 normal = _meshFilter.transform.InverseTransformDirection(points[i].Normal);
+                Vector3 normal = _meshFilter.transform.InverseTransformDirection(springs[i].Normal);
                 
                 _center += position;
                 _vertices[i] = position;
