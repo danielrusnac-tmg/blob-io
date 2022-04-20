@@ -123,12 +123,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _radius: 0.5
-  _resolution: 30
+  _resolution: 10
+  _pressure: 1
+  _stiffness: 500
+  _damp: 10
   _meshFilter: {fileID: 235175341946994063}
-  _blobBody:
-    _gasConstant: 0
-    _stiffness: 0
-    _damp: 0
 --- !u!1 &235175341946994066
 GameObject:
   m_ObjectHideFlags: 0
