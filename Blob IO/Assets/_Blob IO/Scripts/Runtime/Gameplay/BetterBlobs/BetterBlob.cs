@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BlobIO.Controllers;
+﻿using BlobIO.Controllers;
 using UnityEngine;
 
 namespace BlobIO.BetterBlobs
