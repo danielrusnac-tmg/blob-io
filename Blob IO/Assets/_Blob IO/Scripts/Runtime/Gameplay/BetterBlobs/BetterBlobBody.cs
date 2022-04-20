@@ -45,7 +45,7 @@ namespace BlobIO.BetterBlobs
         {
             for (var i = 0; i < _steps; i++)
             {
-                _blobBody.UpdatePoints(Time.fixedDeltaTime / _steps);    
+                _blobBody.UpdatePoints(Time.fixedDeltaTime / _steps, transform);    
                 _circleRenderer.UpdateMesh(_blobBody.Points, _blobBody.Springs);
             }
         }

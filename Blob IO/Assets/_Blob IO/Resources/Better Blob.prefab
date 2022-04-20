@@ -128,6 +128,9 @@ MonoBehaviour:
   _jumpForce: 5
   _jumpAngle: 45
   _setting:
+    _solidMask:
+      serializedVersion: 2
+      m_Bits: 64
     _floorY: -1.75
     _pressure: 500
     _stiffness: 2000
