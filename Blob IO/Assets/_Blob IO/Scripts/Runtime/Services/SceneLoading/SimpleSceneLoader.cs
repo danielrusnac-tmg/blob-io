@@ -6,7 +6,7 @@ namespace BlobIO.Services.SceneLoading
 {
     public class SimpleSceneLoader : ISceneLoader
     {
-        private int[] _levels = new[] { 1, 2 };
+        private readonly int[] _levels = { 2 };
         
         public void LoadLevel(int levelIndex, Action onLoaded)
         {

@@ -1,24 +1,40 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BlobIO.BetterBlobs
 {
+    [Serializable]
+    public class BlobBodySettings
+    {
+        [SerializeField] private float _floorY;
+        [SerializeField] private float _pressure;
+        [SerializeField] private float _stiffness;
+        [SerializeField] private float _damp;
+
+        public float FloorY => _floorY;
+        public float Pressure => _pressure;
+        public float Stiffness => _stiffness;
+        public float Damp => _damp;
+    }
+    
     public class BlobBody
     {
-        private readonly float _pressure;
-        private readonly float _stiffness;
-        private readonly float _damp;
         private readonly BlobRenderer _blobRenderer;
+        private readonly BlobBodySettings _setting;
         private readonly BlobPoint[] _points;
         private readonly Spring[] _springs;
 
         public BlobPoint[] Points => _points;
 
-        public BlobBody(int pointCount, float radius, BlobRenderer blobRenderer, float pressure, float stiffness, float damp)
+        private float Stiffness => _setting.Stiffness;
+        private float Damp => _setting.Damp;
+        private float Pressure => _setting.Pressure;
+        private float FloorY => _setting.FloorY;
+
+        public BlobBody(int pointCount, float radius, BlobRenderer blobRenderer, BlobBodySettings setting)
         {
             _blobRenderer = blobRenderer;
-            _pressure = pressure;
-            _stiffness = stiffness;
-            _damp = damp;
+            _setting = setting;
             _points = CreatePoints(pointCount, radius, Vector3.zero);;
             _springs = CreateSprings(pointCount);
         }
@@ -28,7 +44,7 @@ namespace BlobIO.BetterBlobs
             // gravity force
             for (int i = 0; i < _points.Length; i++)
             {
-                _points[i].Force = Vector3.zero;
+                _points[i].Force = Physics2D.gravity;
             }
 
             // spring force
@@ -44,8 +60,8 @@ namespace BlobIO.BetterBlobs
                     continue;
 
                 Vector3 velocity = _points[_springs[i].A].Velocity - _points[_springs[i].B].Velocity;
-                Vector3 springForce = _stiffness * (distance - _springs[i].Length) * offset / distance;
-                Vector3 dampForce = velocity * _damp;
+                Vector3 springForce = Stiffness * (distance - _springs[i].Length) * offset / distance;
+                Vector3 dampForce = velocity * Damp;
                 Vector3 force = springForce + dampForce;
 
                 _points[_springs[i].A].Force -= force;
@@ -61,7 +77,7 @@ namespace BlobIO.BetterBlobs
                 
                 Vector2 offset = a - b;
                 float distance = offset.magnitude;
-                float pressure = distance * _pressure * (1f / GetArea());
+                float pressure = distance * Pressure * (1f / GetArea());
 
                 _points[_springs[i].A].Force += _springs[i].Normal * pressure;
                 _points[_springs[i].B].Force += _springs[i].Normal * pressure;
@@ -71,7 +87,18 @@ namespace BlobIO.BetterBlobs
             for (int i = 0; i < _points.Length; i++)
             {
                 _points[i].Velocity += _points[i].Force * deltaTime;
-                _points[i].Position += _points[i].Velocity * deltaTime;
+                Vector3 movement = _points[i].Velocity * deltaTime;
+                _points[i].Position += movement;
+                
+                float dry = _points[i].Velocity.y * Time.deltaTime;
+
+                if (_points[i].Position.y + dry < FloorY)
+                {
+                    dry = FloorY - _points[i].Position.y;
+                    _points[i].Velocity.y *= -0.1f;
+                }
+
+                _points[i].Position.y += dry;
             }
         }
 
