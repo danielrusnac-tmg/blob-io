@@ -129,9 +129,9 @@ MonoBehaviour:
   _jumpAngle: 45
   _setting:
     _floorY: -1.75
-    _pressure: 600
+    _pressure: 500
     _stiffness: 2000
-    _damp: 60
+    _damp: 50
   _meshFilter: {fileID: 235175341946994063}
 --- !u!1 &235175341946994066
 GameObject:
