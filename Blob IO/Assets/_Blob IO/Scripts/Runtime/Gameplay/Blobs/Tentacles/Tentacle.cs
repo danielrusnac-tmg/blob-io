@@ -135,6 +135,11 @@ namespace BlobIO.Blobs.Tentacles
         {
             float currentLength = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
             int pointCount = (int) (currentLength / (1f / _resolution));
+            
+            if (_canApplyForce)
+            {
+                _wobbleAmount = Mathf.Lerp(0.4f, 0f, _compression);
+            }
 
             if (pointCount > 1)
             {
