@@ -18,6 +18,7 @@ MonoBehaviour:
   _solidMask:
     serializedVersion: 2
     m_Bits: 64
-  _radius: 2
-  _stepDistance: 1
-  _releaseDistance: 3
+  _checkRadius: 6
+  _tentacleRadius: 4
+  _stepDistance: 4
+  _releaseDistance: 8

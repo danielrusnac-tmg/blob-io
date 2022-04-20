@@ -81,7 +81,7 @@ namespace BlobIO.Blobs
             if (!_input.IsMoving)
                 return 1f;
 
-            float dot = Vector2.Dot(tentacle.GetTentacleDirection, _input.MoveDirection);
+            float dot = Vector2.Dot(tentacle.GetTentacleDirection, _input.MoveDirection.normalized);
             
             return _wightDistribution.Evaluate((dot + 1) / 2);
         }
@@ -94,7 +94,7 @@ namespace BlobIO.Blobs
             
             foreach (PersistentTentacle tentacle in _tentacles)
             {
-                if (tentacle.IsGrabbing)
+                if (tentacle.IsGrabbing && tentacle.CanApplyForce)
                 {
                     ActiveTentaclePercent++;
                     AverageTentacleStretchiness += tentacle.Stretchiness;

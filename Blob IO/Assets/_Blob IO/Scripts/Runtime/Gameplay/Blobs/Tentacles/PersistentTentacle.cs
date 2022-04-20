@@ -21,7 +21,7 @@ namespace BlobIO.Blobs.Tentacles
         private TentaclePoint _grabPoint;
         private Tentacle _tentacle;
         
-        public float Radius => _setting.Radius * _weight;
+        public float Radius => _setting.CheckRadius * _weight;
         public float StepDistance => _setting.StepDistance * _weight;
         public float ReleaseDistance => _setting.ReleaseDistance * _weight;
 
@@ -31,6 +31,7 @@ namespace BlobIO.Blobs.Tentacles
 
         public Vector2 GetTentacleDirection => transform.up;
         public bool IsGrabbing => _isGrabbing;
+        public bool CanApplyForce => _tentacle.CanApplyForce;
         public float Stretchiness => Vector2.Distance(GetTentacleOrigin, _grabPoint.Position) / Radius;
         public Vector2 TipPosition => _grabPoint.Position;
 
@@ -155,7 +156,7 @@ namespace BlobIO.Blobs.Tentacles
         {
             _lifeTime = 0f;
             _tentacle = Instantiate(_tentaclePrefab, transform);
-            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0.5f);
+            _tentacle.Construct(_basePoint, _grabPoint, _stiffness, _damp, 0.5f, _setting.TentacleRadius);
         }
 
         private void RemoveSpring()

@@ -21,8 +21,7 @@ namespace BlobIO.Blobs.Tentacles
         [SerializeField] private AnimationCurve _grabEase;
         [SerializeField] private AnimationCurve _releaseEase;
         [SerializeField] private AnimationCurve _wobbleEase;
-
-        private bool _canApplyForce;
+        
         private int _dynamicPointCount;
         private float _wobbleOffset;
         private float _length;
@@ -35,6 +34,7 @@ namespace BlobIO.Blobs.Tentacles
         private TentaclePoint _basePoint;
         private TentaclePoint _tipPoint;
 
+        public bool CanApplyForce { get; private set; }
         public float Weight { get; set; } = 1f;
         public Vector2 TipPoint => _tipPoint.Position;
 
@@ -72,7 +72,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private void FixedUpdate()
         {
-            if (!_canApplyForce)
+            if (!CanApplyForce)
                 return;
             
             Vector2 force = CalculateForce(_tipPoint.Position, _basePoint.Position - Vector2.up * _verticalOffset) /
@@ -89,7 +89,7 @@ namespace BlobIO.Blobs.Tentacles
 
         private IEnumerator SpawnAnimationRoutine()
         {
-            _canApplyForce = false;
+            CanApplyForce = false;
             float time = 0f;
 
             while (time < _grabDuration)
@@ -108,12 +108,12 @@ namespace BlobIO.Blobs.Tentacles
             // _wobbleFrequency = 0f;
             _renderPercent = 1f;
                 
-            _canApplyForce = true;
+            CanApplyForce = true;
         }
 
         private IEnumerator DespawnAnimationRoutine()
         {
-            _canApplyForce = false;
+            CanApplyForce = false;
             float time = 0f;
 
             while (time < _releaseDuration)
@@ -136,7 +136,7 @@ namespace BlobIO.Blobs.Tentacles
             float currentLength = Vector2.Distance(_basePoint.Position, _tipPoint.Position);
             int pointCount = (int) (currentLength / (1f / _resolution));
             
-            if (_canApplyForce)
+            if (CanApplyForce)
             {
                 _wobbleAmount = Mathf.Lerp(0.4f, 0f, _compression);
             }

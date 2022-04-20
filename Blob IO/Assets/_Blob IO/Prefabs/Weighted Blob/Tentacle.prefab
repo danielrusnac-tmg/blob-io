@@ -46,10 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resolution: 30
   _lineRenderer: {fileID: 5713633763142965066}
-  _grabDuration: 0.15
+  _grabDuration: 0.2
   _releaseDuration: 0.15
   _wobbleAmount: 0
-  _wobbleFrequency: -15
+  _wobbleFrequency: -8
   _renderPercent: 1
   _grabEase:
     serializedVersion: 2
