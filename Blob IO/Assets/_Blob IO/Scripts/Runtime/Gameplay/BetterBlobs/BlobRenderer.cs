@@ -24,9 +24,9 @@ namespace BlobIO.BetterBlobs
             Triangles = new int[count * 3];
         }
 
-        public void UpdateMesh(BlobPoint[] points)
+        public void UpdateMesh(BlobPoint[] points, Spring[] springs)
         {
-            CalculateMeshTriangulation(points);
+            CalculateMeshTriangulation(points, springs);
             UpdateMeshData();
         }
 
@@ -38,7 +38,7 @@ namespace BlobIO.BetterBlobs
             _mesh.RecalculateBounds();
         }
 
-        private void CalculateMeshTriangulation(BlobPoint[] points)
+        private void CalculateMeshTriangulation(BlobPoint[] points, Spring[] springs)
         {
             _center = Vector3.zero;
             
@@ -46,7 +46,7 @@ namespace BlobIO.BetterBlobs
             {
                 _center += points[i].Position;
                 Vertices[i] = points[i].Position;
-                _normals[i] = points[i].Normal;
+                _normals[i] = springs[i].Normal;
                 CreateTriangle(triangle, i);
             }
 

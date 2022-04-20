@@ -50,7 +50,7 @@ MonoBehaviour:
   _grabMask:
     serializedVersion: 2
     m_Bits: 320
-  _tryCount: 20
+  _tryCount: 10
   _rayRadius: 15
   _angleRange: 360
   _angleBias:
@@ -122,13 +122,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be8bc27382414251a98d56ddce28f1ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _steps: 10
   _radius: 0.5
   _resolution: 10
+  _jumpForce: 5
+  _jumpAngle: 45
   _setting:
-    _floorY: -2
-    _pressure: 400
-    _stiffness: 300
-    _damp: 16
+    _floorY: -1.75
+    _pressure: 600
+    _stiffness: 2000
+    _damp: 60
   _meshFilter: {fileID: 235175341946994063}
 --- !u!1 &235175341946994066
 GameObject:

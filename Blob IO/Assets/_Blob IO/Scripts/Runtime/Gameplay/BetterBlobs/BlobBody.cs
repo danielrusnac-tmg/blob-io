@@ -19,12 +19,11 @@ namespace BlobIO.BetterBlobs
     
     public class BlobBody
     {
+        public readonly BlobPoint[] Points;
+        public readonly Spring[] Springs;
+        
         private readonly BlobRenderer _blobRenderer;
         private readonly BlobBodySettings _setting;
-        private readonly BlobPoint[] _points;
-        private readonly Spring[] _springs;
-
-        public BlobPoint[] Points => _points;
 
         private float Stiffness => _setting.Stiffness;
         private float Damp => _setting.Damp;
@@ -35,23 +34,31 @@ namespace BlobIO.BetterBlobs
         {
             _blobRenderer = blobRenderer;
             _setting = setting;
-            _points = CreatePoints(pointCount, radius, Vector3.zero);;
-            _springs = CreateSprings(pointCount);
+            Points = CreatePoints(pointCount, radius, Vector3.zero);;
+            Springs = CreateSprings(pointCount);
+        }
+
+        public void AddVelocity(Vector3 velocityDelta)
+        {
+            for (int i = 0; i < Points.Length; i++)
+            {
+                Points[i].Velocity = velocityDelta;
+            }
         }
 
         public void UpdatePoints(float deltaTime)
         {
             // gravity force
-            for (int i = 0; i < _points.Length; i++)
+            for (int i = 0; i < Points.Length; i++)
             {
-                _points[i].Force = Physics2D.gravity;
+                Points[i].Force = Physics2D.gravity;
             }
 
             // spring force
-            for (var i = 0; i < _springs.Length; i++)
+            for (var i = 0; i < Springs.Length; i++)
             {
-                Vector3 a = _points[_springs[i].A].Position;
-                Vector3 b = _points[_springs[i].B].Position;
+                Vector3 a = Points[Springs[i].A].Position;
+                Vector3 b = Points[Springs[i].B].Position;
 
                 Vector3 offset = a - b;
                 float distance = offset.magnitude;
@@ -59,46 +66,46 @@ namespace BlobIO.BetterBlobs
                 if (distance==0)
                     continue;
 
-                Vector3 velocity = _points[_springs[i].A].Velocity - _points[_springs[i].B].Velocity;
-                Vector3 springForce = Stiffness * (distance - _springs[i].Length) * offset / distance;
+                Vector3 velocity = Points[Springs[i].A].Velocity - Points[Springs[i].B].Velocity;
+                Vector3 springForce = Stiffness * (distance - Springs[i].Length) * offset / distance;
                 Vector3 dampForce = velocity * Damp;
                 Vector3 force = springForce + dampForce;
 
-                _points[_springs[i].A].Force -= force;
-                _points[_springs[i].B].Force += force;
-                _springs[i].Normal = Vector3.Cross(Vector3.forward, offset.normalized);
+                Points[Springs[i].A].Force -= force;
+                Points[Springs[i].B].Force += force;
+                Springs[i].Normal = Vector3.Cross(Vector3.forward, offset.normalized);
             }
             
             // pressure force
-            for (int i = 0; i < _springs.Length; i++)
+            for (int i = 0; i < Springs.Length; i++)
             {
-                Vector2 a = _points[_springs[i].A].Position;
-                Vector2 b = _points[_springs[i].B].Position;
+                Vector2 a = Points[Springs[i].A].Position;
+                Vector2 b = Points[Springs[i].B].Position;
                 
                 Vector2 offset = a - b;
                 float distance = offset.magnitude;
                 float pressure = distance * Pressure * (1f / GetArea());
 
-                _points[_springs[i].A].Force += _springs[i].Normal * pressure;
-                _points[_springs[i].B].Force += _springs[i].Normal * pressure;
+                Points[Springs[i].A].Force += Springs[i].Normal * pressure;
+                Points[Springs[i].B].Force += Springs[i].Normal * pressure;
             }
             
             // move
-            for (int i = 0; i < _points.Length; i++)
+            for (int i = 0; i < Points.Length; i++)
             {
-                _points[i].Velocity += _points[i].Force * deltaTime;
-                Vector3 movement = _points[i].Velocity * deltaTime;
-                _points[i].Position += movement;
+                Points[i].Velocity += Points[i].Force * deltaTime;
+                Vector3 movement = Points[i].Velocity * deltaTime;
+                Points[i].Position += movement;
                 
-                float dry = _points[i].Velocity.y * Time.deltaTime;
+                float dry = Points[i].Velocity.y * deltaTime;
 
-                if (_points[i].Position.y + dry < FloorY)
+                if (Points[i].Position.y + dry < FloorY)
                 {
-                    dry = FloorY - _points[i].Position.y;
-                    _points[i].Velocity.y *= -0.1f;
+                    dry = FloorY - Points[i].Position.y;
+                    Points[i].Velocity.y *= -0.1f;
                 }
 
-                _points[i].Position.y += dry;
+                Points[i].Position.y += dry;
             }
         }
 
@@ -157,7 +164,7 @@ namespace BlobIO.BetterBlobs
             {
                 A = a,
                 B = b,
-                Length = Vector2.Distance(_points[a].Position, _points[b].Position)
+                Length = Vector2.Distance(Points[a].Position, Points[b].Position)
             };
         }
     }
