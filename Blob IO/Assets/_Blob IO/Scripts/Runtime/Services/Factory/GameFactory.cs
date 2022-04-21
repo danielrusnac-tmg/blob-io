@@ -21,7 +21,7 @@ namespace BlobIO.Services.Factory
         
         public async void CreatePlayer(Vector3 position)
         {
-            GameObject playerPrefab = await _assetProvider.Load(AssetPaths.JOINTS_BLOB);
+            GameObject playerPrefab = await _assetProvider.Load(AssetPaths.SPRING_BLOB);
             _player = Object.Instantiate(playerPrefab, position, Quaternion.identity);
 
             SetPlayerInput();
