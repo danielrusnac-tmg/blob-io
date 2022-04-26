@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c174eefab13845f7b2631ba9edc4cc18, type: 3}
   m_Name: Blob Setting
   m_EditorClassIdentifier: 
-  _moveForce: 8
+  _moveForce: 15
   _blobRadius: 0.15
   _forceVerticalOffset: 0.5
   _angleBias:
